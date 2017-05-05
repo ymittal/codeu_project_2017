@@ -74,7 +74,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
                 // updates list of conversations (and the corresponding views) in adapter
                 view.setChatList(conversations);
 
-                setConversationParticipantDetails(conversations);
+                getConversationParticipantDetails(conversations);
             }
 
             @Override
@@ -109,10 +109,10 @@ public class ConversationsPresenter implements ConversationsInteractor {
      *
      * @param conversations list of conversations
      */
-    private void setConversationParticipantDetails(ArrayList<Conversation> conversations) {
+    private void getConversationParticipantDetails(ArrayList<Conversation> conversations) {
         List<String> participants = getParticipantsFromConversations(conversations);
         if (participants.size() == 0) {
-            Log.i(TAG, "setConversationParticipantDetails: 0 conversations");
+            Log.i(TAG, "getConversationParticipantDetails: 0 conversations");
             return;
         }
 
@@ -121,7 +121,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
                     @Override
                     public void onResponse(Call<HashMap<String, ConversationParticipantDetails>> call,
                                            Response<HashMap<String, ConversationParticipantDetails>> response) {
-                        Log.i(TAG, "setConversationParticipantDetails:retrieved "
+                        Log.i(TAG, "getConversationParticipantDetails:retrieved "
                                 + String.valueOf(response.body().size()));
 
                         view.setParticipantDetailsMap(response.body());
@@ -130,7 +130,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
                     @Override
                     public void onFailure(Call<HashMap<String, ConversationParticipantDetails>> call,
                                           Throwable t) {
-                        Log.e(TAG, "setConversationParticipantDetails " + t.getMessage());
+                        Log.e(TAG, "getConversationParticipantDetails " + t.getMessage());
                     }
                 });
     }

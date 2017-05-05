@@ -25,7 +25,12 @@
 
         <activity
             android:name=".view.message.MessagesActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.tabs.TabsActivity" />
+        </activity>
+
     </application>
 
 </manifest>
