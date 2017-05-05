@@ -3,7 +3,7 @@ package com.google.codeu.chatme.presenter;
 import android.util.Log;
 
 import com.google.codeu.chatme.model.Conversation;
-import com.google.codeu.chatme.model.ConversationParticipantDetails;
+import com.google.codeu.chatme.model.PublicUserDetails;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.utility.network.RetrofitBuilder;
 import com.google.codeu.chatme.view.adapter.ConversationListAdapter;
@@ -117,10 +117,10 @@ public class ConversationsPresenter implements ConversationsInteractor {
         }
 
         RetrofitBuilder.getService().getDetailsFromIds(participants)
-                .enqueue(new Callback<HashMap<String, ConversationParticipantDetails>>() {
+                .enqueue(new Callback<HashMap<String, PublicUserDetails>>() {
                     @Override
-                    public void onResponse(Call<HashMap<String, ConversationParticipantDetails>> call,
-                                           Response<HashMap<String, ConversationParticipantDetails>> response) {
+                    public void onResponse(Call<HashMap<String, PublicUserDetails>> call,
+                                           Response<HashMap<String, PublicUserDetails>> response) {
                         Log.i(TAG, "getConversationParticipantDetails:retrieved "
                                 + String.valueOf(response.body().size()));
 
@@ -128,7 +128,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
                     }
 
                     @Override
-                    public void onFailure(Call<HashMap<String, ConversationParticipantDetails>> call,
+                    public void onFailure(Call<HashMap<String, PublicUserDetails>> call,
                                           Throwable t) {
                         Log.e(TAG, "getConversationParticipantDetails " + t.getMessage());
                     }

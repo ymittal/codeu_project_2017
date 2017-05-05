@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.Conversation;
-import com.google.codeu.chatme.model.ConversationParticipantDetails;
+import com.google.codeu.chatme.model.PublicUserDetails;
 import com.google.codeu.chatme.presenter.ConversationsPresenter;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.view.message.MessagesActivity;
@@ -45,7 +45,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
      * A map from different conversation participants to their details such as full names and
      * profile picture download urls
      */
-    private HashMap<String, ConversationParticipantDetails> participantDetailsMap = new HashMap<>();
+    private HashMap<String, PublicUserDetails> participantDetailsMap = new HashMap<>();
 
     public ConversationListAdapter(Context context) {
         this.presenter = new ConversationsPresenter(this);
@@ -63,7 +63,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
         final Conversation conversation = conversations.get(position);
 
         String participantId = getRecipientId(conversation.getParticipants());
-        ConversationParticipantDetails pDetails = participantDetailsMap.get(participantId);
+        PublicUserDetails pDetails = participantDetailsMap.get(participantId);
 
         if (pDetails != null) {
             holder.tvSender.setText(pDetails.getFullName());
@@ -134,7 +134,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     }
 
     @Override
-    public void setParticipantDetailsMap(HashMap<String, ConversationParticipantDetails>
+    public void setParticipantDetailsMap(HashMap<String, PublicUserDetails>
                                                  participantDetailsMap) {
         this.participantDetailsMap = participantDetailsMap;
         notifyDataSetChanged();

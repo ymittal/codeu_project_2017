@@ -1,7 +1,7 @@
 package com.google.codeu.chatme.view.adapter;
 
 import com.google.codeu.chatme.model.Conversation;
-import com.google.codeu.chatme.model.ConversationParticipantDetails;
+import com.google.codeu.chatme.model.PublicUserDetails;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,5 +24,5 @@ public interface ConversationListAdapterView {
      *
      * @param map map from participant ids to details
      */
-    void setParticipantDetailsMap(HashMap<String, ConversationParticipantDetails> map);
+    void setParticipantDetailsMap(HashMap<String, PublicUserDetails> map);
 }
