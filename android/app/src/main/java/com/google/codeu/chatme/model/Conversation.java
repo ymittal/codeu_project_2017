@@ -11,6 +11,7 @@ public final class Conversation {
     public String id;
     public String owner;
     public long timeCreated;
+    public Message lastMessage;
 
     /**
      * List of participants of a conversation (participants may be added or
@@ -51,6 +52,15 @@ public final class Conversation {
         this.timeCreated = timeCreated;
     }
 
+    public String getLastMessageContent() {
+        return this.lastMessage.getContent();
+    }
+
+    public String getReadableLastMessageTime() {
+        // TODO: format string
+        return String.valueOf(this.lastMessage.getTimeCreated());
+    }
+
     /**
      * @return reference to a mutable list of participants
      */
@@ -61,4 +71,5 @@ public final class Conversation {
     public void addParticipant(String participantId) {
         participants.add(participantId);
     }
+
 }

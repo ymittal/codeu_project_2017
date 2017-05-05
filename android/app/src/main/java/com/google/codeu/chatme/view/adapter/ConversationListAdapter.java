@@ -61,15 +61,19 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Conversation conversation = conversations.get(position);
-        String participantId = getRecipientId(conversation.getParticipants());
 
+        String participantId = getRecipientId(conversation.getParticipants());
         ConversationParticipantDetails pDetails = participantDetailsMap.get(participantId);
+
         if (pDetails != null) {
             holder.tvSender.setText(pDetails.getFullName());
             holder.setHolderPicture(pDetails.getPhotoUrl());
         } else {
             holder.setHolderPicture(null);
         }
+
+        holder.tvLastMessage.setText(conversation.getLastMessageContent());
+        holder.tvTimeSent.setText(conversation.getReadableLastMessageTime());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,12 +147,16 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvSender;
+        private TextView tvLastMessage;
+        private TextView tvTimeSent;
         private CircularImageView civPic;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             tvSender = (TextView) itemView.findViewById(R.id.tvSender);
+            tvLastMessage = (TextView) itemView.findViewById(R.id.tvLastMessage);
+            tvTimeSent = (TextView) itemView.findViewById(R.id.tvTimeSent);
             civPic = (CircularImageView) itemView.findViewById(R.id.civPic);
         }
 
