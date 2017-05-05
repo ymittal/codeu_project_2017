@@ -60,7 +60,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="left"
                 android:hint="Enter a message..."
-                android:inputType="textCapSentences|textMultiLine"
+                android:inputType="textCapSentences|textMultiLine|textShortMessage"
                 android:maxLines="3"
                 android:paddingBottom="6dp"
                 android:paddingTop="6dp"

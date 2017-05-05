@@ -32,6 +32,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:text="Conversation Name"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/tvSender"
+            android:layout_marginTop="4dp"
             android:text="Latest Message" />
 
         <TextView
