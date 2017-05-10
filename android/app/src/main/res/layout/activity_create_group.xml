@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ChatMe_Red">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </android.support.design.widget.AppBarLayout>
+
+
+    <Button
+        android:id="@+id/btnAddParticipants"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="133dp"
+        android:background="@color/ChatMe_Blue"
+        android:enabled="false"
+        android:text="@string/btn_add_group_participants"
+        android:textColor="@android:color/background_light"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/etNewChatName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnAddParticipants"
+        android:layout_alignEnd="@+id/btnAddParticipants"
+        android:layout_alignStart="@+id/btnAddParticipants"
+        android:layout_marginBottom="29dp"
+        android:ems="10"
+        android:hint="@string/et_name_your_new_group"
+        android:inputType="textPersonName"
+        android:textAlignment="center" />
+
+    <ImageView
+        android:id="@+id/imgChatAvatar"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_above="@+id/etNewChatName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="28dp"
+        app:srcCompat="@drawable/default_group_avatar" />
+
+</RelativeLayout>

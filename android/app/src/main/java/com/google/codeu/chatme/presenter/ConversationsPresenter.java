@@ -54,6 +54,9 @@ public class ConversationsPresenter implements ConversationsInteractor {
     }
 
     public void loadConversations() {
+        /* TODO: Only load conversations with non-null lastMessage object */
+        /* TODO: Order conversations based on timestamp for lastMessage object */
+
         Query conversationsQuery = mRootRef.child("conversations").orderByChild("timeCreated");
         conversationsQuery.addValueEventListener(new ValueEventListener() {
 

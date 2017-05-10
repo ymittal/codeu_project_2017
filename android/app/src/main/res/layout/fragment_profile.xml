@@ -10,9 +10,8 @@
         android:id="@+id/ivProfilePic"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="22dp"
         app:border="true"
         app:border_color="#aacccccc"
         app:border_width="1dp"
@@ -25,7 +24,7 @@
         android:layout_below="@+id/ivProfilePic"
         android:layout_centerHorizontal="true"
         android:ems="10"
-        android:hint="Full Name"
+        android:hint="@string/et_full_name"
         android:inputType="textPersonName|textCapWords" />
 
     <EditText
@@ -36,7 +35,7 @@
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:focusable="false"
-        android:hint="Username"
+        android:hint="@string/et_username"
         android:inputType="textPersonName"
         android:textColor="@color/common_google_signin_btn_text_light_focused" />
 
@@ -47,7 +46,7 @@
         android:layout_below="@+id/etUsername"
         android:layout_centerHorizontal="true"
         android:ems="10"
-        android:hint="Change Password"
+        android:hint="@string/et_change_password"
         android:inputType="textPassword" />
 
     <Button
@@ -60,7 +59,7 @@
         android:layout_marginTop="24dp"
         android:background="@color/ChatMe_Blue"
         android:elevation="0dp"
-        android:text="Save Changes"
+        android:text="@string/btn_save_changes"
         android:textColor="@android:color/background_light"
         android:textStyle="bold" />
 
@@ -74,7 +73,7 @@
         android:layout_marginTop="18dp"
         android:background="@android:color/holo_red_dark"
         android:elevation="0dp"
-        android:text="Log Out"
+        android:text="@string/btn_log_out"
         android:textColor="@android:color/background_light"
         android:textStyle="bold" />
 

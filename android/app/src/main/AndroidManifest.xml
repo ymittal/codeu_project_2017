@@ -23,6 +23,10 @@
         <activity
             android:name=".view.message.MessagesActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".view.create.CreateConversationActivity"
+            android:label="@string/title_activity_create_conversation" />
     </application>
+
 
 </manifest>
