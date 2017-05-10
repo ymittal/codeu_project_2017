@@ -62,7 +62,7 @@ public class ConversationsFragment extends Fragment implements ConversationsView
         rvChatList = (RecyclerView) view.findViewById(R.id.rvChatList);
         rvChatList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        btnCreateConversation = (ImageButton) view.findViewById(R.id.btnCreateChat);
+        btnCreateConversation = (ImageButton) view.findViewById(R.id.btnCreateConversation);
         btnCreateConversation.setOnClickListener(this);
         conversationListAdapter = new ConversationListAdapter(getContext());
         rvChatList.setAdapter(conversationListAdapter);
@@ -92,12 +92,8 @@ public class ConversationsFragment extends Fragment implements ConversationsView
         switch (view.getId()) {
 
             // create conversation button clicked
-            case R.id.btnCreateChat:
+            case R.id.btnCreateConversation:
                 openCreateConversationActivity();
-                break;
-
-            // search button clicked
-            case R.id.btnSearchChats:
                 break;
         }
     }
@@ -108,7 +104,6 @@ public class ConversationsFragment extends Fragment implements ConversationsView
     public void openCreateConversationActivity() {
         Intent mIntent = new Intent(getActivity(), CreateConversationActivity.class);
         getActivity().startActivity(mIntent);
-        getActivity().finish();
     }
 
     /**

@@ -5,25 +5,14 @@
     android:layout_height="match_parent"
     android:background="@color/ChatMe_Red">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/cardview_shadow_start_color"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
-
-    <TextView
-        android:id="@+id/tvAddParticipantsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp"
-        android:text="@string/title_activity_add_participants"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </android.support.design.widget.AppBarLayout>
 </RelativeLayout>
