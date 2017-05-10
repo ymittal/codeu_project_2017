@@ -13,15 +13,9 @@ public interface CreateConversationInteractor {
      * user of their choosing
      *
      * @param conversation
+     * return conversationId
      */
-    public void addConversation(Conversation conversation);
-    /**
-     * Gets the current user's ID
-     *
-     * @return userId
-     */
-    public String getUserId();
-
+    public String addConversation(Conversation conversation);
     /**
      * Generates a new conversation ID
      *

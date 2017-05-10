@@ -30,15 +30,19 @@ public class CreateConversationPresenter implements CreateConversationInteractor
     }
 
     /**
-     * Adds conversation to Firebase DB
+     * Adds conversation to Firebase DB and returns new conversation Id
      *
      * @param conversation
+     * return conversationId
      */
-    public void addConversation(Conversation conversation) {
+    public String addConversation(Conversation conversation) {
         /* TODO: Check for existing conversation with same participants before adding to DB */
 
-        mRootRef.child("conversations").child(conversation.getId()).setValue(conversation);
+        String conversationId = newConversationId();
+        mRootRef.child("conversations").child(conversationId).setValue(conversation);
         Log.i(TAG, "addConversation:success");
+
+        return conversationId;
     }
 
     /**
@@ -47,17 +51,6 @@ public class CreateConversationPresenter implements CreateConversationInteractor
      * @return conversationId
      */
     public String newConversationId() {
-        String conversationId = mRootRef.child("conversations").push().getKey();
-        return conversationId;
-    }
-
-    /**
-     * Gets the current user's ID
-     *
-     * @return userId
-     */
-    public String getUserId() {
-        String userId = mAuth.getCurrentUser().getUid();
-        return userId;
+        return mRootRef.child("conversations").push().getKey();
     }
 }

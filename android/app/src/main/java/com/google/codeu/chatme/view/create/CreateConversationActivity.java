@@ -12,6 +12,7 @@ public class CreateConversationActivity extends AppCompatActivity
 
     private RecyclerView rvUserList;
     private UserListAdapter userListAdapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

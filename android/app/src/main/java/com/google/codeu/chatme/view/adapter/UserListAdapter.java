@@ -13,6 +13,7 @@ import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.User;
 import com.google.codeu.chatme.presenter.CreateConversationPresenter;
 import com.google.codeu.chatme.presenter.UserPresenter;
+import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.view.message.MessagesActivity;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -113,12 +114,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-            // Create new conversation object, set Owner and Id, and add participant
-            Conversation conversation = new Conversation(createConversationPresenter.getUserId());
-            conversation.setId(createConversationPresenter.newConversationId());
+            // Create new conversation object, set Owner and add participant
+            Conversation conversation = new Conversation(FirebaseUtil.getCurrentUser().getUid());
             conversation.addParticipant(userId);
+
             // Attempt to add conversation object to Firebase DB and trigger Messages Activity
-            createConversationPresenter.addConversation(conversation);
+            conversation.setId(createConversationPresenter.addConversation(conversation));
             openMessagesActivity(view.getContext(), conversation.getId());
         }
     }
