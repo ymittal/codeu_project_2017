@@ -59,6 +59,5 @@ public class CreateConversationPresenter implements CreateConversationInteractor
     public String getUserId() {
         String userId = mAuth.getCurrentUser().getUid();
         return userId;
-
     }
 }
