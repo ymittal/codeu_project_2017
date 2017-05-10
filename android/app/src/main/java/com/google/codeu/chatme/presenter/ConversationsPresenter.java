@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.ConversationParticipantDetails;
-import com.google.codeu.chatme.model.User;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.utility.network.RetrofitBuilder;
 import com.google.codeu.chatme.view.adapter.ConversationListAdapter;

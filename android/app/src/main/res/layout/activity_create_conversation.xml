@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ChatMe_Red">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/tbCreateConversation"
         android:layout_width="match_parent"
@@ -24,11 +25,12 @@
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/userList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tbCreateConversation"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tbCreateConversation" />
 
 </RelativeLayout>

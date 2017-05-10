@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.User;
-import com.google.codeu.chatme.presenter.ConversationsPresenter;
 import com.google.codeu.chatme.presenter.CreateConversationPresenter;
 import com.google.codeu.chatme.presenter.UserPresenter;
 import com.google.codeu.chatme.view.message.MessagesActivity;
@@ -29,15 +28,15 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         implements UserListAdapterView {
 
     private List<User> users = new ArrayList<>();
-    private CreateConversationPresenter createConvoPresenter;
+    private CreateConversationPresenter createConversationPresenter;
 
-    private UserPresenter presenter;
+    private UserPresenter userPresenter;
     public static final String CONV_ID_EXTRA = "CONV_ID_EXTRA";
     private final Context context;
 
     public UserListAdapter(Context context) {
-        this.presenter = new UserPresenter(this);
-        this.createConvoPresenter = new CreateConversationPresenter(this);
+        this.userPresenter = new UserPresenter(this);
+        this.createConversationPresenter = new CreateConversationPresenter(this);
         this.context = context;
     }
 
@@ -48,13 +47,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     public void loadUsers() {
-        this.presenter.loadUsers();
+        this.userPresenter.loadUsers();
     }
 
     @Override
     public void onBindViewHolder(UserListAdapter.ViewHolder holder, int position) {
         User user = users.get(position);
-        holder.setUserID(user.getId());
+        holder.setUserId(user.getId());
 
         holder.setHolderPicture(user.getPhotoUrl());
         if (user.getFullName() != null) {
@@ -80,10 +79,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
      * various views of a user list item
      */
     public class ViewHolder extends RecyclerView.ViewHolder
-        implements View.OnClickListener {
+            implements View.OnClickListener {
         private TextView tvName;
         private CircularImageView civUserPic;
-        private String userID;
+        private String userId;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -92,8 +91,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
         }
 
-        private void setUserID(String uid) {
-            this.userID = uid;
+        private void setUserId(String uid) {
+            this.userId = uid;
         }
 
         private void setHolderPicture(String picUrl) {
@@ -114,9 +113,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-
-            Conversation convo  = createConvoPresenter.createConversation(userID);
-            openMessagesActivity(view.getContext(), convo.getId());
+            // Create new conversation object, set Owner and Id, and add participant
+            Conversation conversation = new Conversation(createConversationPresenter.getUserId());
+            conversation.setId(createConversationPresenter.newConversationId());
+            conversation.addParticipant(userId);
+            // Attempt to add conversation object to Firebase DB and trigger Messages Activity
+            createConversationPresenter.addConversation(conversation);
+            openMessagesActivity(view.getContext(), conversation.getId());
         }
     }
 
