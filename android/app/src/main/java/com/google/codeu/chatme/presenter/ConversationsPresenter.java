@@ -35,13 +35,11 @@ import retrofit2.Response;
 public class ConversationsPresenter implements ConversationsInteractor {
 
     private static final String TAG = ConversationsPresenter.class.getName();
-
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-
     /**
      * {@link ConversationListAdapter} reference to update list of conversations
      */
     private final ConversationListAdapter view;
+    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 
     /**
      * Constructor to accept a reference to a recycler view adapter to bind
@@ -54,6 +52,9 @@ public class ConversationsPresenter implements ConversationsInteractor {
     }
 
     public void loadConversations() {
+        /* TODO: Only load conversations with non-null lastMessage object */
+        /* TODO: Order conversations based on timestamp for lastMessage object */
+
         Query conversationsQuery = mRootRef.child("conversations").orderByChild("timeCreated");
         conversationsQuery.addValueEventListener(new ValueEventListener() {
 

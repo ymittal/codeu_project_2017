@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -36,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Full Name"
+                android:hint="@string/et_full_name"
                 android:imeOptions="actionDone"
                 android:inputType="textPersonName|textCapWords" />
 
@@ -55,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:enabled="false"
-                android:hint="Username"
+                android:hint="@string/et_username"
                 android:inputType="textPersonName"
                 android:textColor="@android:color/darker_gray" />
 
@@ -74,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:fontFamily="sans-serif"
-                android:hint="New Password"
+                android:hint="@string/et_change_password"
                 android:inputType="textPassword" />
 
         </android.support.design.widget.TextInputLayout>
@@ -89,7 +88,7 @@
             android:layout_marginTop="18dp"
             android:background="@color/ChatMe_Blue"
             android:elevation="0dp"
-            android:text="Save Changes"
+            android:text="@string/btn_save_changes"
             android:textColor="@android:color/background_light"
             android:textStyle="bold" />
 
@@ -103,7 +102,7 @@
             android:layout_marginTop="18dp"
             android:background="@android:color/holo_red_dark"
             android:elevation="0dp"
-            android:text="Log Out"
+            android:text="@string/btn_log_out"
             android:textColor="@android:color/background_light"
             android:textStyle="bold" />
 

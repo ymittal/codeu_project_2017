@@ -31,6 +31,10 @@
                 android:value=".view.tabs.TabsActivity" />
         </activity>
 
+        <activity
+            android:name=".view.create.CreateConversationActivity"
+            android:label="@string/title_activity_create_conversation" />
     </application>
+
 
 </manifest>
