@@ -1,5 +1,6 @@
 package com.google.codeu.chatme.model;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
@@ -52,10 +53,20 @@ public final class Conversation {
         this.timeCreated = timeCreated;
     }
 
+    public void setLastMessage(Message lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public Message getLastMessage() {
+        return this.lastMessage;
+    }
+
+    @Exclude
     public String getLastMessageContent() {
         return this.lastMessage.getContent();
     }
 
+    @Exclude
     public String getReadableLastMessageTime() {
         // TODO: format string
         return String.valueOf(this.lastMessage.getTimeCreated());
@@ -71,5 +82,4 @@ public final class Conversation {
     public void addParticipant(String participantId) {
         participants.add(participantId);
     }
-
 }

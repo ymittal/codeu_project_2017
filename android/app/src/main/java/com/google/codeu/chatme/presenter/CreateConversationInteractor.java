@@ -13,14 +13,7 @@ public interface CreateConversationInteractor {
      * Creates new 2-user conversation between current logged in user and a second
      * user of their choosing
      *
-     * @param conversation return conversationId
+     * @param conversation conversation object to add to database
      */
-    public String addConversation(Conversation conversation);
-
-    /**
-     * Generates a new conversation ID
-     *
-     * @return conversationId
-     */
-    public String newConversationId();
+    public void addConversation(Conversation conversation);
 }

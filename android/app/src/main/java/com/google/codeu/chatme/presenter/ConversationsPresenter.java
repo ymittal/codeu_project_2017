@@ -52,7 +52,6 @@ public class ConversationsPresenter implements ConversationsInteractor {
     }
 
     public void loadConversations() {
-        /* TODO: Only load conversations with non-null lastMessage object */
         /* TODO: Order conversations based on timestamp for lastMessage object */
 
         Query conversationsQuery = mRootRef.child("conversations").orderByChild("timeCreated");
@@ -63,7 +62,8 @@ public class ConversationsPresenter implements ConversationsInteractor {
                 ArrayList<Conversation> conversations = new ArrayList<>();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Conversation conv = data.getValue(Conversation.class);
-                    if (conv.getParticipants().contains(FirebaseUtil.getCurrentUserUid())) {
+                    if (conv.getParticipants().contains(FirebaseUtil.getCurrentUserUid())
+                            & conv.getLastMessage() != null) {
                         conv.setId(data.getKey());
                         conversations.add(conv);
                     }

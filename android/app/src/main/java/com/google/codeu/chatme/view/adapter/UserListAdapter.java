@@ -28,12 +28,14 @@ import java.util.List;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder>
         implements UserListAdapterView {
 
-    private List<User> users = new ArrayList<>();
-    private CreateConversationPresenter createConversationPresenter;
-
-    private UserPresenter userPresenter;
     public static final String CONV_ID_EXTRA = "CONV_ID_EXTRA";
+
+    private List<User> users = new ArrayList<>();
+
     private final Context context;
+
+    private CreateConversationPresenter createConversationPresenter;
+    private UserPresenter userPresenter;
 
     public UserListAdapter(Context context) {
         this.userPresenter = new UserPresenter(this);
@@ -73,6 +75,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     public void setUserList(List<User> users) {
         this.users = users;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void openMessageActivity(String conversationId) {
+        Intent mIntent = new Intent(context, MessagesActivity.class);
+        mIntent.putExtra(CONV_ID_EXTRA, conversationId);
+        context.startActivity(mIntent);
     }
 
     /**
@@ -119,21 +128,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             conversation.addParticipant(userId);
 
             // Attempt to add conversation object to Firebase DB and trigger Messages Activity
-            String conversationId = createConversationPresenter.addConversation(conversation);
-            conversation.setId(conversationId);
-            openMessagesActivity(view.getContext(), conversation.getId());
+            createConversationPresenter.addConversation(conversation);
         }
-    }
-
-    /**
-     * Launches {@link MessagesActivity} for the specific conversation
-     *
-     * @param context        context to create a startActivity intent
-     * @param conversationId id of conversation to display messages of
-     */
-    private void openMessagesActivity(Context context, String conversationId) {
-        Intent mIntent = new Intent(context, MessagesActivity.class);
-        mIntent.putExtra(CONV_ID_EXTRA, conversationId);
-        context.startActivity(mIntent);
     }
 }
