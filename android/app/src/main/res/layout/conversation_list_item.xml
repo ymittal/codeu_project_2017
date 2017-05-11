@@ -50,7 +50,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:text="9:03 AM" />
+            android:text="9:03 AM"
+            android:textAllCaps="true"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
 

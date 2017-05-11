@@ -69,8 +69,7 @@ public final class Conversation {
 
     @Exclude
     public String getReadableLastMessageTime() {
-        // TODO: format string
-        return String.valueOf(this.lastMessage.getTimeCreated());
+        return this.lastMessage.getReadableTime();
     }
 
     /**
