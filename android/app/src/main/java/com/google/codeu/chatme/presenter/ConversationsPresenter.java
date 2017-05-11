@@ -52,9 +52,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
     }
 
     public void loadConversations() {
-        /* TODO: Order conversations based on timestamp for lastMessage object */
-
-        Query conversationsQuery = mRootRef.child("conversations").orderByChild("timeCreated");
+        Query conversationsQuery = mRootRef.child("conversations").orderByChild("lastMessage").startAt("");
         conversationsQuery.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -62,14 +60,13 @@ public class ConversationsPresenter implements ConversationsInteractor {
                 ArrayList<Conversation> conversations = new ArrayList<>();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Conversation conv = data.getValue(Conversation.class);
-                    if (conv.getParticipants().contains(FirebaseUtil.getCurrentUserUid())
-                            & conv.getLastMessage() != null) {
+                    if (conv.getParticipants().contains(FirebaseUtil.getCurrentUserUid())) {
                         conv.setId(data.getKey());
                         conversations.add(conv);
                     }
                 }
 
-                Collections.reverse(conversations);
+                Collections.sort(conversations, new Conversation.LastMessageCompator());
                 Log.i(TAG, "loadConversations:retrieved " + conversations.size());
 
                 // updates list of conversations (and the corresponding views) in adapter
