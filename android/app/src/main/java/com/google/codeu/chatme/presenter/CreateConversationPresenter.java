@@ -40,7 +40,7 @@ public class CreateConversationPresenter implements CreateConversationInteractor
                         if (databaseError != null) {
                             Log.w(TAG, "addConversation:failure " + databaseError.getMessage());
                         } else {
-                            Log.i(TAG, "addMessage:success " + conversationId);
+                            Log.i(TAG, "addConversation:success " + conversationId);
                             view.openMessageActivity(conversationId);
                         }
                     }
