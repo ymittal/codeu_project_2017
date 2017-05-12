@@ -85,6 +85,12 @@ public class ProfileFragment extends Fragment implements ProfileView, View.OnCli
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        presenter.setAuthStateListener();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -99,6 +105,12 @@ public class ProfileFragment extends Fragment implements ProfileView, View.OnCli
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.removeAuthStateListener();
     }
 
     @Override
