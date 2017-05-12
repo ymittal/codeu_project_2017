@@ -14,6 +14,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // TODO: implement basic splash screen in this activity
-        startActivity(new Intent(this, LoginActivity.class));
+        startActivity(new Intent(this, SplashScreen.class));
     }
 }
