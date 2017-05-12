@@ -182,29 +182,18 @@ public class ProfilePresenter implements ProfileInteractor {
         if (fullName.isEmpty()) {
             return;
         }
-        view.showProgressDialog(R.string.progress_update_name);
 
         mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid())
-                .child("fullName").setValue(fullName);
-
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(fullName)
-                .build();
-
-        FirebaseUtil.getCurrentUser().updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        view.hideProgressDialog();
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "updateFullName:success " + fullName);
-                            view.makeToast(R.string.toast_update_name);
-                        } else {
-                            Log.e(TAG, "updateFullName:failure");
-                            view.makeToast(task.getException().getMessage());
-                        }
-                    }
-                });
+                .child("fullName").setValue(fullName, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Log.e(TAG, "updateFullName:failure " + databaseError.getMessage());
+                } else {
+                    Log.i(TAG, "updateFullName:success changed to " + fullName);
+                }
+            }
+        });
     }
 
     /**
@@ -212,14 +201,22 @@ public class ProfilePresenter implements ProfileInteractor {
      *
      * @param username new username
      */
-    private void updateUserName(String username) {
+    private void updateUserName(final String username) {
         if (username.isEmpty()) {
             return;
         }
 
         mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid())
-                .child("username").setValue(username);
-        Log.i(TAG, "updateUsername:success " + FirebaseUtil.getCurrentUserUid());
+                .child("username").setValue(username, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Log.e(TAG, "updateUserName:failure " + databaseError.getMessage());
+                } else {
+                    Log.i(TAG, "updateUserName:success changed to " + username);
+                }
+            }
+        });
     }
 
     /**
