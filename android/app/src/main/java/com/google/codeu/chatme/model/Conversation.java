@@ -1,8 +1,10 @@
 package com.google.codeu.chatme.model;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @IgnoreExtraProperties
@@ -11,6 +13,7 @@ public final class Conversation {
     public String id;
     public String owner;
     public long timeCreated;
+    public Message lastMessage;
 
     /**
      * List of participants of a conversation (participants may be added or
@@ -51,6 +54,24 @@ public final class Conversation {
         this.timeCreated = timeCreated;
     }
 
+    public void setLastMessage(Message lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public Message getLastMessage() {
+        return this.lastMessage;
+    }
+
+    @Exclude
+    public String getLastMessageContent() {
+        return this.lastMessage.getContent();
+    }
+
+    @Exclude
+    public String getReadableLastMessageTime() {
+        return this.lastMessage.getReadableTime();
+    }
+
     /**
      * @return reference to a mutable list of participants
      */
@@ -60,5 +81,18 @@ public final class Conversation {
 
     public void addParticipant(String participantId) {
         participants.add(participantId);
+    }
+
+    /**
+     * A @{@link Comparator} class to order conversation objects according to when their
+     * last message was sent (most recent first)
+     */
+    public static class LastMessageCompator implements Comparator<Conversation> {
+
+        @Override
+        public int compare(Conversation conversation, Conversation t1) {
+            return Long.compare(t1.getLastMessage().getTimeCreated(),
+                    conversation.getLastMessage().getTimeCreated());
+        }
     }
 }

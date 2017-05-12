@@ -3,7 +3,7 @@ package com.google.codeu.chatme.presenter;
 import android.util.Log;
 
 import com.google.codeu.chatme.model.Conversation;
-import com.google.codeu.chatme.model.ConversationParticipantDetails;
+import com.google.codeu.chatme.model.PublicUserDetails;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.utility.network.RetrofitBuilder;
 import com.google.codeu.chatme.view.adapter.ConversationListAdapter;
@@ -35,13 +35,11 @@ import retrofit2.Response;
 public class ConversationsPresenter implements ConversationsInteractor {
 
     private static final String TAG = ConversationsPresenter.class.getName();
-
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-
     /**
      * {@link ConversationListAdapter} reference to update list of conversations
      */
     private final ConversationListAdapter view;
+    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 
     /**
      * Constructor to accept a reference to a recycler view adapter to bind
@@ -54,10 +52,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
     }
 
     public void loadConversations() {
-        /* TODO: Only load conversations with non-null lastMessage object */
-        /* TODO: Order conversations based on timestamp for lastMessage object */
-
-        Query conversationsQuery = mRootRef.child("conversations").orderByChild("timeCreated");
+        Query conversationsQuery = mRootRef.child("conversations").orderByChild("lastMessage").startAt("");
         conversationsQuery.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -71,13 +66,13 @@ public class ConversationsPresenter implements ConversationsInteractor {
                     }
                 }
 
-                Collections.reverse(conversations);
+                Collections.sort(conversations, new Conversation.LastMessageCompator());
                 Log.i(TAG, "loadConversations:retrieved " + conversations.size());
 
                 // updates list of conversations (and the corresponding views) in adapter
                 view.setChatList(conversations);
 
-                setConversationParticipantDetails(conversations);
+                getConversationParticipantDetails(conversations);
             }
 
             @Override
@@ -112,28 +107,28 @@ public class ConversationsPresenter implements ConversationsInteractor {
      *
      * @param conversations list of conversations
      */
-    private void setConversationParticipantDetails(ArrayList<Conversation> conversations) {
+    private void getConversationParticipantDetails(ArrayList<Conversation> conversations) {
         List<String> participants = getParticipantsFromConversations(conversations);
         if (participants.size() == 0) {
-            Log.i(TAG, "setConversationParticipantDetails: 0 conversations");
+            Log.i(TAG, "getConversationParticipantDetails: 0 conversations");
             return;
         }
 
         RetrofitBuilder.getService().getDetailsFromIds(participants)
-                .enqueue(new Callback<HashMap<String, ConversationParticipantDetails>>() {
+                .enqueue(new Callback<HashMap<String, PublicUserDetails>>() {
                     @Override
-                    public void onResponse(Call<HashMap<String, ConversationParticipantDetails>> call,
-                                           Response<HashMap<String, ConversationParticipantDetails>> response) {
-                        Log.i(TAG, "setConversationParticipantDetails:retrieved "
+                    public void onResponse(Call<HashMap<String, PublicUserDetails>> call,
+                                           Response<HashMap<String, PublicUserDetails>> response) {
+                        Log.i(TAG, "getConversationParticipantDetails:retrieved "
                                 + String.valueOf(response.body().size()));
 
                         view.setParticipantDetailsMap(response.body());
                     }
 
                     @Override
-                    public void onFailure(Call<HashMap<String, ConversationParticipantDetails>> call,
+                    public void onFailure(Call<HashMap<String, PublicUserDetails>> call,
                                           Throwable t) {
-                        Log.e(TAG, "setConversationParticipantDetails " + t.getMessage());
+                        Log.e(TAG, "getConversationParticipantDetails " + t.getMessage());
                     }
                 });
     }

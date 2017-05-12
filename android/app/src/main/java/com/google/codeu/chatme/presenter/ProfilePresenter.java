@@ -43,8 +43,6 @@ public class ProfilePresenter implements ProfileInteractor {
 
     private FirebaseAuth mAuth;
 
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
     /**
      * Sets up the presenter with a reference to the {@link ProfileFragment}.
      * Additionally, adds {@link com.google.firebase.auth.FirebaseAuth.AuthStateListener}
@@ -61,21 +59,7 @@ public class ProfilePresenter implements ProfileInteractor {
     @javax.annotation.PostConstruct
     public void postConstruct() {
         this.mRootRef = FirebaseDatabase.getInstance().getReference();
-
         this.mAuth = FirebaseAuth.getInstance();
-
-        this.mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                    view.openLoginActivity();
-                }
-            }
-        };
     }
 
     /**
@@ -271,15 +255,5 @@ public class ProfilePresenter implements ProfileInteractor {
                         }
                     }
                 });
-    }
-
-    public void setAuthStateListener() {
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    public void removeAuthStateListener() {
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
     }
 }

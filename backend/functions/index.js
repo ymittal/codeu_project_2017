@@ -15,7 +15,7 @@ exports.getUserDetails = functions.https.onRequest((request, response) => {
 	var result = {};
 
 	if (typeof request.body.ids === 'string') {
-		ids = [ request.body.ids ]
+		ids = [request.body.ids]
 	} else {
 		ids = request.body.ids
 	}
@@ -38,3 +38,17 @@ exports.getUserDetails = functions.https.onRequest((request, response) => {
 	});
 });
 
+/**
+ * Updates a conversation's most recent message whenever a message is added
+ * to the conversation
+ *
+ * Note: This method would need to be modified if message delete feature is
+ * implemented.
+ */
+exports.updateMostRecentMessage = functions.database.ref('/messages/{messageId}')
+	.onWrite(event => {
+		var ref = admin.database().ref("conversations");
+		const message = event.data.val();
+
+		return ref.child(message.conversation).child("lastMessage").set(message);
+	});
