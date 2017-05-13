@@ -23,7 +23,7 @@ import java.util.ArrayList;
  */
 public class UserPresenter implements UserInteractor {
 
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mRootRef;
 
     private final UserListAdapterView view;
 
@@ -37,6 +37,10 @@ public class UserPresenter implements UserInteractor {
      */
     public UserPresenter(UserListAdapterView view) {
         this.view = view;
+    }
+
+    @javax.annotation.PostConstruct
+    public void postConstruct() {mRootRef = FirebaseDatabase.getInstance().getReference();
     }
 
     public void loadUsers() {
