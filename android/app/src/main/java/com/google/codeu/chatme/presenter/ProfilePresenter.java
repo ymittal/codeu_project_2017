@@ -81,21 +81,21 @@ public class ProfilePresenter implements ProfileInteractor {
      * Get current user's profile information and store in User object
      */
     public void getUserProfile() {
-        mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference ref = mRootRef.child("users");
+        ref.child(FirebaseUtil.getCurrentUserUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        view.setUserProfile(user);
-                        Log.i(TAG, "getUserProfile:success profile data loaded");
-                    }
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                view.setUserProfile(user);
+                Log.i(TAG, "getUserProfile:success profile data loaded");
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e(TAG, "getUserProfile:failure could not load profile data");
-                    }
-                });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "getUserProfile:failure could not load profile data");
+            }
+        });
     }
 
     @SuppressWarnings("VisibleForTests")
@@ -227,7 +227,7 @@ public class ProfilePresenter implements ProfileInteractor {
      *
      * @param password new password
      */
-    private void updatePassword(String password) {
+    public void updatePassword(String password) {
         if (password.isEmpty()) {
             return;
         }
