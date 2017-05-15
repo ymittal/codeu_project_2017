@@ -86,7 +86,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
      * @param conversations list of conversations
      * @return list of unique conversation participants ids for current user
      */
-    private List<String> getParticipantsFromConversations(ArrayList<Conversation> conversations) {
+    private List<String> getUniqueParticipants(ArrayList<Conversation> conversations) {
         Set participants = new HashSet();
         for (Conversation conv : conversations) {
             participants.addAll(conv.getParticipants());
@@ -108,7 +108,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
      * @param conversations list of conversations
      */
     private void getConversationParticipantDetails(ArrayList<Conversation> conversations) {
-        List<String> participants = getParticipantsFromConversations(conversations);
+        List<String> participants = getUniqueParticipants(conversations);
         if (participants.size() == 0) {
             Log.i(TAG, "getConversationParticipantDetails: 0 conversations");
             return;

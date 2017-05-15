@@ -34,17 +34,17 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
     private final Context context;
 
-    private CreateConversationPresenter createConversationPresenter;
+    private CreateConversationPresenter createConvPresenter;
     private UserPresenter userPresenter;
 
     public UserListAdapter(Context context) {
         this.userPresenter = new UserPresenter(this);
-        this.createConversationPresenter = new CreateConversationPresenter(this);
+        this.createConvPresenter = new CreateConversationPresenter(this);
         this.context = context;
     }
 
     @Override
-    public UserListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_list_item, parent, false);
         return new ViewHolder(v);
     }
@@ -54,9 +54,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(UserListAdapter.ViewHolder holder, int position) {
-        User user = users.get(position);
-        holder.setUserId(user.getId());
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final User user = users.get(position);
 
         holder.setHolderPicture(user.getPhotoUrl());
         if (user.getFullName() != null) {
@@ -64,6 +63,19 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         } else {
             holder.tvName.setText(user.getUsername());
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // creates a new conversation object and add recipient as a participant
+                Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
+                conv.addParticipant(user.getId());
+
+                // checks for conversation duplicates and then attempts to add a conversation object
+                // or launch Message Activity straight away
+                createConvPresenter.openConversationMessages(conv);
+            }
+        });
     }
 
     @Override
@@ -88,21 +100,16 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
      * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
      * various views of a user list item
      */
-    public class ViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
         private TextView tvName;
         private CircularImageView civUserPic;
-        private String userId;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
+
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
-        }
-
-        private void setUserId(String uid) {
-            this.userId = uid;
         }
 
         private void setHolderPicture(String picUrl) {
@@ -119,16 +126,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
                         .placeholder(R.drawable.placeholder_person)
                         .into(this.civUserPic);
             }
-        }
-
-        @Override
-        public void onClick(View view) {
-            // Create new conversation object, set Owner and add participant
-            Conversation conversation = new Conversation(FirebaseUtil.getCurrentUser().getUid());
-            conversation.addParticipant(userId);
-
-            // Attempt to add conversation object to Firebase DB and trigger Messages Activity
-            createConversationPresenter.addConversation(conversation);
         }
     }
 }
