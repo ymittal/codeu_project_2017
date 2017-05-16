@@ -2,7 +2,9 @@ package com.google.codeu.chatme.view.adapter;
 
 import android.content.Context;
 
+import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.User;
+import com.google.codeu.chatme.view.create.CreateGroupActivity;
 import com.google.codeu.chatme.view.message.MessagesActivity;
 
 import java.util.List;
@@ -25,4 +27,13 @@ public interface UserListAdapterView {
      * @param conversationId id of conversation to display messages of
      */
     void openMessageActivity(String conversationId);
+
+    /**
+     * Launches {@link CreateGroupActivity} with a conversation consisting
+     * of the selected participants
+     *
+     * @param conversation conversation object for group being created
+     */
+    void openCreateGroupActivity(Conversation conversation);
+
 }

@@ -1,19 +1,28 @@
 package com.google.codeu.chatme.view.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
+import com.bignerdranch.android.multiselector.MultiSelector;
+import com.bignerdranch.android.multiselector.SwappingHolder;
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.User;
 import com.google.codeu.chatme.presenter.CreateConversationPresenter;
 import com.google.codeu.chatme.presenter.UserPresenter;
 import com.google.codeu.chatme.utility.FirebaseUtil;
+import com.google.codeu.chatme.view.create.CreateGroupActivity;
 import com.google.codeu.chatme.view.message.MessagesActivity;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -84,22 +93,72 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         context.startActivity(mIntent);
     }
 
+    @Override
+    public void openCreateGroupActivity(Conversation conversation) {
+        Intent mIntent = new Intent(context, CreateGroupActivity.class);
+        context.startActivity(mIntent);
+    }
+
+    private MultiSelector mMultiSelector = new MultiSelector();
+
+    private ModalMultiSelectorCallback mCreateGroupMode = new ModalMultiSelectorCallback(mMultiSelector) {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            super.onCreateActionMode(actionMode, menu);
+            actionMode.getMenuInflater().inflate(R.menu.user_list_item_context, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            if (menuItem.getItemId() == R.id.menu_item_create_group) {
+
+                actionMode.finish();
+                Conversation conversation = new Conversation();
+                conversation.setIsGroup(true);
+
+                for (int i = users.size(); i >= 0; i--) {
+                    if (mMultiSelector.isSelected(i, 0)) {
+                        //  conversation.addParticipant(users.get(i).getId());
+                    }
+                }
+                openCreateGroupActivity(conversation);
+                return true;
+
+            }
+            return false;
+        }
+    };
+
     /**
      * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
      * various views of a user list item
      */
-    public class ViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
-        private TextView tvName;
-        private CircularImageView civUserPic;
-        private String userId;
+    public class ViewHolder extends SwappingHolder
+            implements View.OnClickListener,
+            View.OnLongClickListener {
 
         public ViewHolder(View itemView) {
-            super(itemView);
+            super(itemView, mMultiSelector);
+            itemView.setLongClickable(true);
+            itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            ((AppCompatActivity) context).startSupportActionMode(mCreateGroupMode);
+            mMultiSelector.setSelected(ViewHolder.this, false);
+            return true;
+        }
+
+        private TextView tvName;
+        private CircularImageView civUserPic;
+        private String userId;
+
 
         private void setUserId(String uid) {
             this.userId = uid;
@@ -123,12 +182,19 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-            // Create new conversation object, set Owner and add participant
-            Conversation conversation = new Conversation(FirebaseUtil.getCurrentUser().getUid());
-            conversation.addParticipant(userId);
 
-            // Attempt to add conversation object to Firebase DB and trigger Messages Activity
-            createConversationPresenter.addConversation(conversation);
+            if (!mMultiSelector.tapSelection(ViewHolder.this)) {
+                // do whatever we want to do when not in selection mode
+                // perhaps navigate to a detail screen
+
+                // Create new conversation object, set Owner and add participant
+                Conversation conversation = new Conversation(FirebaseUtil.getCurrentUser().getUid());
+                conversation.addParticipant(userId);
+
+                // Attempt to add conversation object to Firebase DB and trigger Messages Activity
+                createConversationPresenter.addConversation(conversation);
+            }
+
         }
     }
 }

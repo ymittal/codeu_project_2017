@@ -34,4 +34,5 @@
     <string name="tab_title_chats">Chats</string>
     <string name="tab_title_profile">Profile</string>
     <string name="tab_title_users">Users</string>
+    <string name="create_group">Create Group</string>
 </resources>

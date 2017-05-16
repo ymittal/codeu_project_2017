@@ -14,11 +14,7 @@ public final class Conversation {
     public String owner;
     public long timeCreated;
     public Message lastMessage;
-
-    /**
-     * List of participants of a conversation (participants may be added or
-     * removed in case "groups" are implemented)
-     */
+    public boolean isGroup;
     private final List<String> participants = new ArrayList<>();
 
     public Conversation() {
@@ -44,6 +40,14 @@ public final class Conversation {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public void setIsGroup(boolean isGroup) {
+        this.isGroup = isGroup;
+    }
+
+    public boolean getIsGroup() {
+        return this.isGroup;
     }
 
     public long getTimeCreated() {
