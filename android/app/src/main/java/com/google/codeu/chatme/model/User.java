@@ -1,9 +1,12 @@
 package com.google.codeu.chatme.model;
 
+import android.content.Context;
+import android.text.format.DateUtils;
+
+import com.google.codeu.chatme.R;
+import com.google.codeu.chatme.utility.DateTimeUtil;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
-
-import java.util.HashMap;
 
 @IgnoreExtraProperties
 public final class User {
@@ -14,11 +17,7 @@ public final class User {
     private long timeCreated;
     private String photoUrl;
     private long lastSeen;
-
-    /**
-     * List of active devices (strings are NOT device ids)
-     */
-    private HashMap<String, Boolean> connections = new HashMap<>();
+    private boolean isOnline;
 
     public User() {
     }
@@ -75,25 +74,30 @@ public final class User {
         return lastSeen;
     }
 
-    public HashMap<String, Boolean> getConnections() {
-        return connections;
-    }
-
-    @Exclude
     public boolean isOnline() {
-        if (connections == null) {
-            return false;
-        }
-        return connections.size() > 0;
+        return this.isOnline;
     }
 
     @Exclude
-    public String getReadableLastSeen() {
+    public String getReadableLastSeen(Context context) {
+        long differenceInMillis = System.currentTimeMillis() - lastSeen;
+        assert differenceInMillis > 0;
         if (lastSeen == 0) {
             return "";
         }
 
-        // TODO: use DateTimeUtil to figure out "x time ago"
-        return String.valueOf(lastSeen);
+        if (DateUtils.isToday(lastSeen)) {
+            // today
+            String readableTime = DateTimeUtil.getReadableTime(lastSeen);
+            return String.format(context.getString(R.string.last_seen_at), readableTime);
+        } else if ((differenceInMillis / DateTimeUtil.MILLIS_IN_SECOND) < DateTimeUtil.SECS_IN_DAY) {
+            // less than 24 hrs
+            String period = DateTimeUtil.convertToReadableTimePeriod(differenceInMillis, context);
+            return String.format(context.getString(R.string.last_seen_ago), period);
+        } else {
+            // 24 hrs or more
+            String readableDate = DateTimeUtil.getReadableDate(lastSeen);
+            return String.format(context.getString(R.string.last_seen_on), readableDate);
+        }
     }
 }

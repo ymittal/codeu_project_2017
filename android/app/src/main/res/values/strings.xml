@@ -34,4 +34,17 @@
     <string name="tab_title_chats">Chats</string>
     <string name="tab_title_profile">Profile</string>
     <string name="tab_title_users">Users</string>
+    <string name="less_than_a_min">less than a min</string>
+    <string name="last_seen_at">last seen at %1$s</string>
+    <string name="last_seen_ago">last seen %1$s ago</string>
+    <string name="last_seen_on">last seen on %1$s</string>
+
+    <plurals name="number_mins">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d mins</item>
+    </plurals>
+    <plurals name="number_hrs">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
 </resources>

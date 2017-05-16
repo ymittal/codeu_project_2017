@@ -17,7 +17,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -77,8 +76,8 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
      * time when they close the app
      */
     private void setOnlineStatus() {
-        final DatabaseReference myConnectionsRef = mRootRef.child("users")
-                .child(FirebaseUtil.getCurrentUserUid()).child("connections");
+        final DatabaseReference isOnlineRef = mRootRef.child("users")
+                .child(FirebaseUtil.getCurrentUserUid()).child("isOnline");
 
         final DatabaseReference lastSeenRef = mRootRef.child("users")
                 .child(FirebaseUtil.getCurrentUserUid()).child("lastSeen");
@@ -89,15 +88,11 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                     public void onDataChange(DataSnapshot snapshot) {
                         boolean connected = snapshot.getValue(Boolean.class);
                         if (connected) {
-                            // add device to my connections list
-                            DatabaseReference con = myConnectionsRef.push();
-                            con.setValue(Boolean.TRUE);
-
-                            // when this device disconnects, remove it
-                            con.onDisconnect().removeValue();
-
-                            // when I disconnect, update the last time I was seen online
-                            lastSeenRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
+                            isOnlineRef.setValue(Boolean.TRUE);
+                            isOnlineRef.onDisconnect().setValue(Boolean.FALSE);
+                            lastSeenRef.onDisconnect().setValue(System.currentTimeMillis());
+                        } else {
+                            isOnlineRef.setValue(Boolean.FALSE);
                         }
                     }
 

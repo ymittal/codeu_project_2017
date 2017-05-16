@@ -68,7 +68,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         if (user.isOnline()) {
             holder.tvLastSeen.setText("Online");
         } else {
-            holder.tvLastSeen.setText(user.getReadableLastSeen());
+            holder.tvLastSeen.setText(user.getReadableLastSeen(context));
         }
     }
 
