@@ -7,14 +7,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.User;
+import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.view.login.LoginActivity;
 import com.google.codeu.chatme.view.login.LoginView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Following MVP design pattern, this class encapsulates the functionality to
@@ -58,12 +62,49 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    setOnlineStatus();
                     view.openTabsActivity();
                 } else {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
             }
         };
+    }
+
+    /**
+     * Sets a user's online status when they open the app on their device(s). Also sets up
+     * {@link DatabaseReference#onDisconnect()} triggers to update the status and set last seen
+     * time when they close the app
+     */
+    private void setOnlineStatus() {
+        final DatabaseReference myConnectionsRef = mRootRef.child("users")
+                .child(FirebaseUtil.getCurrentUserUid()).child("connections");
+
+        final DatabaseReference lastSeenRef = mRootRef.child("users")
+                .child(FirebaseUtil.getCurrentUserUid()).child("lastOnline");
+
+        FirebaseDatabase.getInstance().getReference(".info/connected")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        boolean connected = snapshot.getValue(Boolean.class);
+                        if (connected) {
+                            // add device to my connections list
+                            DatabaseReference con = myConnectionsRef.push();
+
+                            // when this device disconnects, remove it
+                            con.onDisconnect().removeValue();
+
+                            // when I disconnect, update the last time I was seen online
+                            lastSeenRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.e(TAG, "setOnlineStatus:onCancelled " + error.getMessage());
+                    }
+                });
     }
 
     @Override
