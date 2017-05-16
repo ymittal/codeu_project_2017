@@ -17,7 +17,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <Button
-        android:id="@+id/btnAddParticipants"
+        android:id="@+id/btnStartGroup"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -25,17 +25,17 @@
         android:layout_marginBottom="133dp"
         android:background="@color/ChatMe_Blue"
         android:enabled="false"
-        android:text="@string/btn_add_group_participants"
+        android:text="@string/start_group"
         android:textColor="@android:color/background_light"
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/etNewChatName"
+        android:id="@+id/etGroupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnAddParticipants"
-        android:layout_alignEnd="@+id/btnAddParticipants"
-        android:layout_alignStart="@+id/btnAddParticipants"
+        android:layout_above="@+id/btnStartGroup"
+        android:layout_alignEnd="@+id/btnStartGroup"
+        android:layout_alignStart="@+id/btnStartGroup"
         android:layout_marginBottom="29dp"
         android:ems="10"
         android:hint="@string/et_name_your_new_group"
@@ -43,10 +43,10 @@
         android:textAlignment="center" />
 
     <ImageView
-        android:id="@+id/imgChatAvatar"
+        android:id="@+id/ivGroupAvatar"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_above="@+id/etNewChatName"
+        android:layout_above="@+id/etGroupName"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="28dp"
         app:srcCompat="@drawable/default_group_avatar" />

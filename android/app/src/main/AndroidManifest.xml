@@ -29,6 +29,9 @@
         <activity
             android:name=".view.create.CreateConversationActivity"
             android:label="@string/title_activity_create_conversation" />
+        <activity
+            android:name=".view.create.CreateGroupActivity"
+            android:label="@string/title_activity_new_group" />
         <activity android:name=".view.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

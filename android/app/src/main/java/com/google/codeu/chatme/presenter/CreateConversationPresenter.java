@@ -46,4 +46,23 @@ public class CreateConversationPresenter implements CreateConversationInteractor
                     }
                 });
     }
+
+    @Override
+    public void addGroupConversation(Conversation conversation) {
+
+
+        final String conversationId = mRootRef.child("conversations").push().getKey();
+        mRootRef.child("conversations").child(conversationId).setValue(conversation,
+                new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Log.w(TAG, "addGroupConversation:failure " + databaseError.getMessage());
+                        } else {
+                            Log.i(TAG, "addGroupConversation:success " + conversationId);
+                            view.openCreateGroupActivity(conversationId);
+                        }
+                    }
+                });
+    }
 }

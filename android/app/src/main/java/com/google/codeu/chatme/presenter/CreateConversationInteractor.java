@@ -16,4 +16,12 @@ public interface CreateConversationInteractor {
      * @param conversation conversation object to add to database
      */
     public void addConversation(Conversation conversation);
+
+    /**
+     * Creates group conversation between current logged in user users of their
+     * choosing
+     *
+     * @param conversation conversation object to add to database
+     */
+    public void addGroupConversation(Conversation conversation);
 }

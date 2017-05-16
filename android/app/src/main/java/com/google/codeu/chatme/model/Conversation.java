@@ -10,12 +10,14 @@ import java.util.List;
 @IgnoreExtraProperties
 public final class Conversation {
 
-    public String id;
-    public String owner;
-    public long timeCreated;
-    public Message lastMessage;
-    public boolean isGroup;
+    private String id;
+    private String owner;
+    private long timeCreated;
+    private Message lastMessage;
+    private boolean isGroup;
     private final List<String> participants = new ArrayList<>();
+    private String photoUrl;
+    private String groupName;
 
     public Conversation() {
     }
@@ -48,6 +50,14 @@ public final class Conversation {
 
     public boolean getIsGroup() {
         return this.isGroup;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public long getTimeCreated() {
@@ -85,6 +95,14 @@ public final class Conversation {
 
     public void addParticipant(String participantId) {
         participants.add(participantId);
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     /**

@@ -94,8 +94,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     @Override
-    public void openCreateGroupActivity(Conversation conversation) {
+    public void openCreateGroupActivity(String conversationId) {
         Intent mIntent = new Intent(context, CreateGroupActivity.class);
+        mIntent.putExtra(CONV_ID_EXTRA, conversationId);
         context.startActivity(mIntent);
     }
 
@@ -115,15 +116,15 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             if (menuItem.getItemId() == R.id.menu_item_create_group) {
 
                 actionMode.finish();
-                Conversation conversation = new Conversation();
+                Conversation conversation = new Conversation(FirebaseUtil.getCurrentUser().getUid());
                 conversation.setIsGroup(true);
 
                 for (int i = users.size(); i >= 0; i--) {
                     if (mMultiSelector.isSelected(i, 0)) {
-                        //  conversation.addParticipant(users.get(i).getId());
+                          conversation.addParticipant(users.get(i).getId());
                     }
                 }
-                openCreateGroupActivity(conversation);
+                createConversationPresenter.addGroupConversation(conversation);
                 return true;
 
             }

@@ -32,8 +32,8 @@ public interface UserListAdapterView {
      * Launches {@link CreateGroupActivity} with a conversation consisting
      * of the selected participants
      *
-     * @param conversation conversation object for group being created
+     *  @param conversationId id of conversation being created
      */
-    void openCreateGroupActivity(Conversation conversation);
+    void openCreateGroupActivity(String conversationId);
 
 }
