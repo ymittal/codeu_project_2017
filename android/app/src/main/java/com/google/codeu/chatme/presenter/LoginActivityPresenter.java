@@ -81,7 +81,7 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                 .child(FirebaseUtil.getCurrentUserUid()).child("connections");
 
         final DatabaseReference lastSeenRef = mRootRef.child("users")
-                .child(FirebaseUtil.getCurrentUserUid()).child("lastOnline");
+                .child(FirebaseUtil.getCurrentUserUid()).child("lastSeen");
 
         FirebaseDatabase.getInstance().getReference(".info/connected")
                 .addValueEventListener(new ValueEventListener() {
@@ -91,6 +91,7 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                         if (connected) {
                             // add device to my connections list
                             DatabaseReference con = myConnectionsRef.push();
+                            con.setValue(Boolean.TRUE);
 
                             // when this device disconnects, remove it
                             con.onDisconnect().removeValue();

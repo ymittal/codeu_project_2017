@@ -64,6 +64,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         } else {
             holder.tvName.setText(user.getUsername());
         }
+
+        if (user.isOnline()) {
+            holder.tvLastSeen.setText("Online");
+        } else {
+            holder.tvLastSeen.setText(user.getReadableLastSeen());
+        }
     }
 
     @Override
@@ -91,6 +97,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         private TextView tvName;
+        private TextView tvLastSeen;
         private CircularImageView civUserPic;
         private String userId;
 
@@ -98,6 +105,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             super(itemView);
             itemView.setOnClickListener(this);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
+            tvLastSeen = (TextView) itemView.findViewById(R.id.tvLastSeen);
             civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
         }
 
