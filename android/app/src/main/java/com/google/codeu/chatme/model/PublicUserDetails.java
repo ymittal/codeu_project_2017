@@ -3,7 +3,7 @@ package com.google.codeu.chatme.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ConversationParticipantDetails {
+public class PublicUserDetails {
 
     @SerializedName("fullName")
     @Expose

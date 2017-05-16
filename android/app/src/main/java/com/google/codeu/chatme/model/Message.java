@@ -1,5 +1,9 @@
 package com.google.codeu.chatme.model;
 
+import android.text.format.DateUtils;
+
+import com.google.codeu.chatme.utility.DateTimeUtil;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
@@ -55,5 +59,17 @@ public final class Message {
 
     public long getTimeCreated() {
         return timeCreated;
+    }
+
+    @Exclude
+    public String getReadableTime() {
+        long lastMessageTime = this.timeCreated;
+        if (DateUtils.isToday(lastMessageTime)) {
+            return DateTimeUtil.getReadableTime(lastMessageTime);
+        } else if (DateTimeUtil.isYesterday(lastMessageTime)) {
+            return "Yesterday";
+        } else {
+            return DateTimeUtil.getReadableDate(lastMessageTime);
+        }
     }
 }

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.Conversation;
-import com.google.codeu.chatme.model.ConversationParticipantDetails;
+import com.google.codeu.chatme.model.PublicUserDetails;
 import com.google.codeu.chatme.presenter.ConversationsPresenter;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.view.message.MessagesActivity;
@@ -45,7 +45,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
      * A map from different conversation participants to their details such as full names and
      * profile picture download urls
      */
-    private HashMap<String, ConversationParticipantDetails> participantDetailsMap = new HashMap<>();
+    private HashMap<String, PublicUserDetails> participantDetailsMap = new HashMap<>();
 
     public ConversationListAdapter(Context context) {
         this.presenter = new ConversationsPresenter(this);
@@ -61,15 +61,19 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Conversation conversation = conversations.get(position);
-        String participantId = getRecipientId(conversation.getParticipants());
 
-        ConversationParticipantDetails pDetails = participantDetailsMap.get(participantId);
+        String participantId = getRecipientId(conversation.getParticipants());
+        PublicUserDetails pDetails = participantDetailsMap.get(participantId);
+
         if (pDetails != null) {
             holder.tvSender.setText(pDetails.getFullName());
             holder.setHolderPicture(pDetails.getPhotoUrl());
         } else {
             holder.setHolderPicture(null);
         }
+
+        holder.tvLastMessage.setText(conversation.getLastMessageContent());
+        holder.tvTimeSent.setText(conversation.getReadableLastMessageTime());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +134,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     }
 
     @Override
-    public void setParticipantDetailsMap(HashMap<String, ConversationParticipantDetails>
+    public void setParticipantDetailsMap(HashMap<String, PublicUserDetails>
                                                  participantDetailsMap) {
         this.participantDetailsMap = participantDetailsMap;
         notifyDataSetChanged();
@@ -143,12 +147,16 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvSender;
+        private TextView tvLastMessage;
+        private TextView tvTimeSent;
         private CircularImageView civPic;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             tvSender = (TextView) itemView.findViewById(R.id.tvSender);
+            tvLastMessage = (TextView) itemView.findViewById(R.id.tvLastMessage);
+            tvTimeSent = (TextView) itemView.findViewById(R.id.tvTimeSent);
             civPic = (CircularImageView) itemView.findViewById(R.id.civPic);
         }
 

@@ -5,13 +5,14 @@
     android:layout_height="match_parent"
     android:background="@color/ChatMe_Red"
     tools:context=".view.tabs.ConversationsFragment">
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvChatList"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentTop="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnCreateConversation"
@@ -28,8 +29,6 @@
         app:backgroundTint="@color/ChatMe_Blue"
         app:elevation="0dp"
         app:layout_anchorGravity="bottom|right|" />
-
-
 
 
 </RelativeLayout>
