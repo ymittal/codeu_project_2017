@@ -60,6 +60,14 @@ public class DateTimeUtil {
         return sdf.format(new Date(timeInMillis));
     }
 
+    /**
+     * Converts time to human readable time period (e.g. "an hr" or "2 mins")
+     * I know
+     *
+     * @param milliseconds time in milliseconds
+     * @param context      context to obtain strings
+     * @return readable period
+     */
     public static String convertToReadableTimePeriod(long milliseconds, Context context) {
         assert milliseconds > 0 && milliseconds < SECS_IN_DAY * MILLIS_IN_SECOND;
 

@@ -40,11 +40,11 @@
     <string name="last_seen_on">last seen on %1$s</string>
 
     <plurals name="number_mins">
-        <item quantity="one">%d min</item>
+        <item quantity="one">a min</item>
         <item quantity="other">%d mins</item>
     </plurals>
     <plurals name="number_hrs">
-        <item quantity="one">%d hour</item>
-        <item quantity="other">%d hours</item>
+        <item quantity="one">an hr</item>
+        <item quantity="other">%d hrs</item>
     </plurals>
 </resources>
