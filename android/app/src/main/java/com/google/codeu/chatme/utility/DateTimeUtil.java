@@ -69,7 +69,7 @@ public class DateTimeUtil {
      * @return readable period
      */
     public static String convertToReadableTimePeriod(long milliseconds, Context context) {
-        assert milliseconds > 0 && milliseconds < SECS_IN_DAY * MILLIS_IN_SECOND;
+        assert milliseconds > 0;
 
         long seconds = milliseconds / MILLIS_IN_SECOND;
         if (seconds < SECS_IN_MINUTE) {
