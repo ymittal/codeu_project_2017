@@ -19,6 +19,7 @@ public class SplashScreen extends AppCompatActivity {
 
         final TextView txtView = (TextView) findViewById(R.id.textView);
         txtView.startAnimation(AnimationUtils.loadAnimation(SplashScreen.this, android.R.anim.slide_in_left));
+        int SPLASH_LENGTH_IN_MILLISECONDS = 1500;
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -27,8 +28,6 @@ public class SplashScreen extends AppCompatActivity {
                 startActivity(new Intent(SplashScreen.this, LoginActivity.class));
                 finish();
             }
-        }, 1500);
-
-
+        }, SPLASH_LENGTH_IN_MILLISECONDS);
     }
 }
