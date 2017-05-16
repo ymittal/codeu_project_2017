@@ -10,12 +10,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.codeu.chatme.R;
-import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.view.adapter.UserListAdapter;
-import com.google.codeu.chatme.view.create.CreateGroupActivity;
 import com.google.codeu.chatme.view.create.CreateGroupView;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -44,11 +41,10 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
     }
 
 
-
     @SuppressWarnings("VisibleForTests")
     @Override
     public void uploadGroupPictureToStorage(final Uri data, final String conversationId) {
-
+        view.showProgressDialog(R.string.progress_upload_pic);
         StorageReference filepath = FirebaseStorage.getInstance().getReference()
                 .child("group-pics").child(FirebaseUtil.getCurrentUserUid());
 
@@ -58,6 +54,7 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         String downloadUrl = taskSnapshot.getDownloadUrl().toString();
                         Log.i(TAG, "uploadGroupPicture:success:downloadUrl " + downloadUrl);
+                        view.setGroupPicture(downloadUrl);
                         updateGroupPhotoUrl(downloadUrl, conversationId);
                     }
                 })
@@ -69,23 +66,43 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
                 });
     }
 
+    @Override
+    public void setGroupName(final String groupName, String conversationId) {
+        if (groupName.isEmpty()) {
+            return;
+        }
+
+        mRootRef.child("conversations").child(conversationId)
+                .child("groupName").setValue(groupName, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Log.e(TAG, "updateGroupName:failure " + databaseError.getMessage());
+                } else {
+                    Log.i(TAG, "updateGroupName:success set to " + groupName);
+                }
+            }
+        });
+        view.openMessageActivity(conversationId);
+    }
+
     /**
      * Updates logged-in user's profile pic storage url
      *
-     * @param downloadUri new profile pic download url
+     * @param downloadUri    new profile pic download url
      * @param conversationId ID for group conversation
      */
     private void updateGroupPhotoUrl(String downloadUri, String conversationId) {
         mRootRef.child("conversations").child(conversationId)
                 .child("photoUrl").setValue(downloadUri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.i(TAG, "updateGroupPhotoUrl:success");
-                        } else {
-                            Log.e(TAG, "updateGroupPhotoUrl:failure");
-                        }
-                    }
-                });
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.i(TAG, "updateGroupPhotoUrl:success");
+                } else {
+                    Log.e(TAG, "updateGroupPhotoUrl:failure");
+                }
+            }
+        });
     }
 }

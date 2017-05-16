@@ -20,14 +20,13 @@
         android:id="@+id/btnStartGroup"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="133dp"
+        android:layout_marginBottom="131dp"
         android:background="@color/ChatMe_Blue"
-        android:enabled="false"
         android:text="@string/start_group"
         android:textColor="@android:color/background_light"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:id="@+id/etGroupName"

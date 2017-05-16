@@ -12,11 +12,23 @@ public interface CreateGroupView {
      */
     void openMessageActivity(String conversationId);
 
+
     /**
      * Sets group's avatar picture
      *
      * @param downloadUrl url of group picture
      */
     void setGroupPicture(String downloadUrl);
+    /**
+     * Shows progress loader with the given message
+     *
+     * @param messsage resource Id of string message to display
+     */
+    void showProgressDialog(int messsage);
+
+    /**
+     * Hides progress loader
+     */
+    void hideProgressDialog();
 
 }

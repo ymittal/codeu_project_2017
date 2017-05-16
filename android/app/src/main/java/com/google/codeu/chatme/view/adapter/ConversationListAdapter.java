@@ -15,6 +15,8 @@ import com.google.codeu.chatme.presenter.ConversationsPresenter;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.view.message.MessagesActivity;
 import com.google.codeu.chatme.view.tabs.ConversationsFragment;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -33,6 +35,8 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
 
     public static final String CONV_ID_EXTRA = "CONV_ID_EXTRA";
     private final Context context;
+
+    private DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("users");
 
     /**
      * List of conversations to display in the list
@@ -62,17 +66,28 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Conversation conversation = conversations.get(position);
 
-        String participantId = getRecipientId(conversation.getParticipants());
-        PublicUserDetails pDetails = participantDetailsMap.get(participantId);
+        if (!conversation.getIsGroup()) {
 
-        if (pDetails != null) {
-            holder.tvSender.setText(pDetails.getFullName());
-            holder.setHolderPicture(pDetails.getPhotoUrl());
+            String participantId = getRecipientId(conversation.getParticipants());
+            PublicUserDetails pDetails = participantDetailsMap.get(participantId);
+
+            if (pDetails != null) {
+                holder.tvSender.setText(pDetails.getFullName());
+                holder.setHolderPicture(pDetails.getPhotoUrl());
+            } else {
+                holder.setHolderPicture(null);
+            }
+            holder.tvLastMessage.setText(conversation.getLastMessageContent());
         } else {
-            holder.setHolderPicture(null);
+            // TODO : Grab last message sender's Full Name
+            //  PublicUserDetails sender = participantDetailsMap.get(conversation.getLastMessage().getAuthor());
+
+            holder.tvSender.setText(conversation.getGroupName());
+            holder.setHolderPicture(conversation.getPhotoUrl());
+            holder.tvLastMessage.setText(conversation.getLastMessage().getAuthor() + ": "
+                    + conversation.getLastMessageContent());
         }
 
-        holder.tvLastMessage.setText(conversation.getLastMessageContent());
         holder.tvTimeSent.setText(conversation.getReadableLastMessageTime());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +97,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
             }
         });
     }
+
 
     /**
      * Note: This function would need to altered if and when "groups" feature is introduced
