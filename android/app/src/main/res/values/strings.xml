@@ -38,6 +38,7 @@
     <string name="last_seen_at">last seen at %1$s</string>
     <string name="last_seen_ago">last seen %1$s ago</string>
     <string name="last_seen_on">last seen on %1$s</string>
+    <string name="sign_out_failure">Sign out failed! Try again later.</string>
 
     <plurals name="number_mins">
         <item quantity="one">a min</item>

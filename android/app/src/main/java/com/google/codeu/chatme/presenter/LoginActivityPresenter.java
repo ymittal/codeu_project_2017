@@ -94,6 +94,7 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                             lastSeenRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
                         } else {
                             isOnlineRef.setValue(Boolean.FALSE);
+                            lastSeenRef.setValue(ServerValue.TIMESTAMP);
                         }
                     }
 
