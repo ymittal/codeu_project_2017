@@ -74,6 +74,15 @@ public final class User {
         return lastSeen;
     }
 
+    public void setIsOnline(boolean online) {
+        isOnline = online;
+    }
+
+    public boolean getIsOnline() {
+        return this.isOnline;
+    }
+
+    @Exclude
     public boolean isOnline() {
         return this.isOnline;
     }

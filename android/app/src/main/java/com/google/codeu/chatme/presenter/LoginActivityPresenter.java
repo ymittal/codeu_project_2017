@@ -17,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -90,7 +91,7 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                         if (connected) {
                             isOnlineRef.setValue(Boolean.TRUE);
                             isOnlineRef.onDisconnect().setValue(Boolean.FALSE);
-                            lastSeenRef.onDisconnect().setValue(System.currentTimeMillis());
+                            lastSeenRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
                         } else {
                             isOnlineRef.setValue(Boolean.FALSE);
                         }
