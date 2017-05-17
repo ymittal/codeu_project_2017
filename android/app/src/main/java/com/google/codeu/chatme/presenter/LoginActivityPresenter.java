@@ -93,7 +93,9 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                             Log.i(TAG, "signUp:success:" + currentUser.getUid());
 
                             // saves new user to real-time database
-                            addUser(currentUser.getUid(), username);
+                            User newUser = new User(username);
+                            newUser.setFullName(username);
+                            addUser(currentUser.getUid(), newUser);
                         }
                     }
                 });
@@ -102,11 +104,10 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
     /**
      * Saves a new user to Firebase real-time database
      *
-     * @param id   id of {@link User}
-     * @param name display name of {@link User}
+     * @param id      id of {@link User}
+     * @param newUser {@link User} object to be saved to database
      */
-    private void addUser(final String id, String name) {
-        User newUser = new User(name);
+    private void addUser(final String id, User newUser) {
 
         mRootRef.child("users").child(id).setValue(newUser, new DatabaseReference.CompletionListener() {
 

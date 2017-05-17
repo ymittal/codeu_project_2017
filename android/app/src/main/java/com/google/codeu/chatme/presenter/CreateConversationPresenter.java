@@ -4,13 +4,17 @@ import android.util.Log;
 
 import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.view.adapter.UserListAdapter;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashSet;
 
 public class CreateConversationPresenter implements CreateConversationInteractor {
 
-    private static final String TAG = ConversationsPresenter.class.getName();
+    private static final String TAG = CreateConversationPresenter.class.getName();
     /**
      * {@link UserListAdapter} reference to update list of conversations
      */
@@ -30,8 +34,6 @@ public class CreateConversationPresenter implements CreateConversationInteractor
 
     @Override
     public void addConversation(Conversation conversation) {
-        /* TODO: Check for existing conversation with same participants before adding to DB */
-
         final String conversationId = mRootRef.child("conversations").push().getKey();
         mRootRef.child("conversations").child(conversationId).setValue(conversation,
                 new DatabaseReference.CompletionListener() {
@@ -45,5 +47,36 @@ public class CreateConversationPresenter implements CreateConversationInteractor
                         }
                     }
                 });
+    }
+
+    @Override
+    public void openConversationMessages(final Conversation conversation) {
+        mRootRef.child("conversations").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final HashSet participantsSet = new HashSet(conversation.getParticipants());
+
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Conversation conv = data.getValue(Conversation.class);
+
+                    // opens Messages if participants same as those of an existing conversation
+                    HashSet participants = new HashSet(conv.getParticipants());
+                    if (participantsSet.equals(participants)) {
+                        conv.setId(data.getKey());
+                        view.openMessageActivity(conv.getId());
+                        return;
+                    }
+                }
+
+                // none of the other conversations have the same participants
+                addConversation(conversation);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "openConversationMessages:failure " + databaseError.getMessage());
+            }
+        });
+
     }
 }

@@ -44,7 +44,7 @@ public class UserPresenter implements UserInteractor {
     }
 
     public void loadUsers() {
-        mRootRef.child("users").addValueEventListener(new ValueEventListener() {
+        mRootRef.child("users").orderByChild("fullName").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
