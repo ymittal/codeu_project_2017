@@ -15,8 +15,6 @@ import com.google.codeu.chatme.presenter.ConversationsPresenter;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.view.message.MessagesActivity;
 import com.google.codeu.chatme.view.tabs.ConversationsFragment;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -35,8 +33,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
 
     public static final String CONV_ID_EXTRA = "CONV_ID_EXTRA";
     private final Context context;
-
-    private DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("users");
 
     /**
      * List of conversations to display in the list
@@ -66,29 +62,35 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Conversation conversation = conversations.get(position);
 
-        if (!conversation.getIsGroup()) {
+        holder.tvTimeSent.setText(conversation.getReadableLastMessageTime());
 
-            String participantId = getRecipientId(conversation.getParticipants());
-            PublicUserDetails pDetails = participantDetailsMap.get(participantId);
+        if (participantDetailsMap != null && participantDetailsMap.size() > 0) {
+            if (!conversation.getIsGroup()) {
+                String participantId = getDirectRecipientId(conversation.getParticipants());
+                PublicUserDetails pDetails = participantDetailsMap.get(participantId);
 
-            if (pDetails != null) {
                 holder.tvSender.setText(pDetails.getFullName());
                 holder.setHolderPicture(pDetails.getPhotoUrl());
+                holder.tvLastMessage.setText(conversation.getLastMessageContent());
             } else {
-                holder.setHolderPicture(null);
+                String lastSenderId = conversation.getLastMessage().getAuthor();
+                String lastSenderName = participantDetailsMap.get(lastSenderId).getFullName();
+
+                holder.tvSender.setText(conversation.getGroupName());
+                holder.setHolderPicture(conversation.getPhotoUrl());
+                holder.tvLastMessage.setText(lastSenderName + ": "
+                        + conversation.getLastMessageContent());
             }
-            holder.tvLastMessage.setText(conversation.getLastMessageContent());
         } else {
-            // TODO : Grab last message sender's Full Name
-            //  PublicUserDetails sender = participantDetailsMap.get(conversation.getLastMessage().getAuthor());
-
-            holder.tvSender.setText(conversation.getGroupName());
-            holder.setHolderPicture(conversation.getPhotoUrl());
-            holder.tvLastMessage.setText(conversation.getLastMessage().getAuthor() + ": "
-                    + conversation.getLastMessageContent());
+            // http getDetailsFromIds has not completed yet
+            holder.setHolderPicture(null);
+            if (!conversation.getIsGroup()) {
+                holder.tvLastMessage.setText(conversation.getLastMessageContent());
+            } else {
+                holder.tvSender.setText(conversation.getGroupName());
+                holder.setHolderPicture(conversation.getPhotoUrl());
+            }
         }
-
-        holder.tvTimeSent.setText(conversation.getReadableLastMessageTime());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,20 +102,16 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
 
 
     /**
-     * Note: This function would need to altered if and when "groups" feature is introduced
-     *
      * @param participants list of participant Ids for a particular conversation
-     * @return recipient id (in current user's scope)
+     * @return one-on-one recipient id (in current user's scope)
      */
-    private String getRecipientId(List<String> participants) {
-        if (participants.size() > 1) {
-            for (String id : participants) {
-                if (!FirebaseUtil.getCurrentUserUid().equals(id)) {
-                    return id;
-                }
+    private String getDirectRecipientId(List<String> participants) {
+        for (String id : participants) {
+            if (!id.equals(FirebaseUtil.getCurrentUserUid())) {
+                return id;
             }
         }
-        return FirebaseUtil.getCurrentUserUid();    // should not be returned ideally
+        return null;    // should not be returned ideally
     }
 
     /**
