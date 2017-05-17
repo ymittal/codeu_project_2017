@@ -1,6 +1,5 @@
 package com.google.codeu.chatme.view.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -43,17 +42,20 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
     private final Context context;
 
-    private CreateConversationPresenter createConversationPresenter;
+    private CreateConversationPresenter createConvPresenter;
     private UserPresenter userPresenter;
+
+    private MultiSelector mMultiSelector = new MultiSelector();
 
     public UserListAdapter(Context context) {
         this.userPresenter = new UserPresenter(this);
-        this.createConversationPresenter = new CreateConversationPresenter(this);
+        this.userPresenter.postConstruct();
+        this.createConvPresenter = new CreateConversationPresenter(this);
         this.context = context;
     }
 
     @Override
-    public UserListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_list_item, parent, false);
         return new ViewHolder(v);
     }
@@ -63,7 +65,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(UserListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         User user = users.get(position);
         holder.setUserId(user.getId());
 
@@ -100,8 +102,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         context.startActivity(mIntent);
     }
 
-    private MultiSelector mMultiSelector = new MultiSelector();
-
     private ModalMultiSelectorCallback mCreateGroupMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
@@ -112,21 +112,19 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+        public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
             if (menuItem.getItemId() == R.id.menu_item_create_group) {
-
-                actionMode.finish();
-                Conversation conversation = new Conversation(FirebaseUtil.getCurrentUser().getUid());
+                mode.finish();
+                Conversation conversation = new Conversation(FirebaseUtil.getCurrentUserUid());
                 conversation.setIsGroup(true);
 
                 for (int i = users.size(); i >= 0; i--) {
                     if (mMultiSelector.isSelected(i, 0)) {
-                          conversation.addParticipant(users.get(i).getId());
+                        conversation.addParticipant(users.get(i).getId());
                     }
                 }
-                createConversationPresenter.addGroupConversation(conversation);
+                createConvPresenter.addConversation(conversation);
                 return true;
-
             }
             return false;
         }
@@ -136,30 +134,23 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
      * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
      * various views of a user list item
      */
-    public class ViewHolder extends SwappingHolder
-            implements View.OnClickListener,
+    public class ViewHolder extends SwappingHolder implements View.OnClickListener,
             View.OnLongClickListener {
-
-        public ViewHolder(View itemView) {
-            super(itemView, mMultiSelector);
-            itemView.setLongClickable(true);
-            itemView.setOnLongClickListener(this);
-            itemView.setOnClickListener(this);
-            tvName = (TextView) itemView.findViewById(R.id.tvName);
-            civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
-        }
-
-        @Override
-        public boolean onLongClick(View view) {
-            ((AppCompatActivity) context).startSupportActionMode(mCreateGroupMode);
-            mMultiSelector.setSelected(ViewHolder.this, false);
-            return true;
-        }
 
         private TextView tvName;
         private CircularImageView civUserPic;
         private String userId;
 
+        public ViewHolder(View itemView) {
+            super(itemView, mMultiSelector);
+
+            itemView.setLongClickable(true);
+            itemView.setOnLongClickListener(this);
+            itemView.setOnClickListener(this);
+
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
+            civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
+        }
 
         private void setUserId(String uid) {
             this.userId = uid;
@@ -183,19 +174,26 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-
             if (!mMultiSelector.tapSelection(ViewHolder.this)) {
                 // do whatever we want to do when not in selection mode
                 // perhaps navigate to a detail screen
 
-                // Create new conversation object, set Owner and add participant
-                Conversation conversation = new Conversation(FirebaseUtil.getCurrentUser().getUid());
-                conversation.addParticipant(userId);
+                // creates a new conversation object and add recipient as a participant
+                Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
+                conv.addParticipant(userId);
+                conv.setIsGroup(false);
 
-                // Attempt to add conversation object to Firebase DB and trigger Messages Activity
-                createConversationPresenter.addConversation(conversation);
+                // checks for conversation duplicates and then attempts to add a conversation object
+                // or launch Message Activity straight away
+                createConvPresenter.openConversationMessages(conv);
             }
+        }
 
+        @Override
+        public boolean onLongClick(View view) {
+            ((AppCompatActivity) context).startSupportActionMode(mCreateGroupMode);
+            mMultiSelector.setSelected(ViewHolder.this, false);
+            return true;
         }
     }
 }

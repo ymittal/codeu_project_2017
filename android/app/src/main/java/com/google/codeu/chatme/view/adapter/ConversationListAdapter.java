@@ -126,9 +126,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
         context.startActivity(mIntent);
     }
 
-    /**
-     * @return number of conversations
-     */
     @Override
     public int getItemCount() {
         return conversations.size();

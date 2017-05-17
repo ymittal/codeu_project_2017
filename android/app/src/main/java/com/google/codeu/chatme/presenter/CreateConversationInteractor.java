@@ -15,13 +15,14 @@ public interface CreateConversationInteractor {
      *
      * @param conversation conversation object to add to database
      */
-    public void addConversation(Conversation conversation);
+    void addConversation(Conversation conversation);
 
     /**
-     * Creates group conversation between current logged in user users of their
-     * choosing
+     * First checks whether any of the existing conversations in the database have the same
+     * participants and then, accordingly, adds a new conversation or opens
+     * {@link com.google.codeu.chatme.view.message.MessagesActivity} for the existing one
      *
-     * @param conversation conversation object to add to database
+     * @param conversation conversation object to open the messages of
      */
-    public void addGroupConversation(Conversation conversation);
+    void openConversationMessages(Conversation conversation);
 }
