@@ -11,7 +11,7 @@ admin.initializeApp(functions.config().firebase);
  * urls. Accepts a list of user ids in the post request body
  */
 exports.getUserDetails = functions.https.onRequest((request, response) => {
-	const ref = admin.database().ref("users");
+	var ref = admin.database().ref("users");
 	var result = {};
 	var ids = [];
 
@@ -53,3 +53,29 @@ exports.updateMostRecentMessage = functions.database.ref('/messages/{messageId}'
 
 		return ref.child(message.conversation).child("lastMessage").set(message);
 	});
+
+/**
+ * Sets a unique username for the newly created user
+ */
+exports.setUniqueUsername = functions.auth.user().onCreate(event => {
+	var ref = admin.database().ref("users");
+
+	const id = event.data.uid;
+	const email = event.data.email;
+	// string before '@' symbol with trailing digits removed
+	const potentialUsername = email.substring(0, email.indexOf('@')).replace(/\d+$/, '');
+
+	ref.once("value", function(snapshot) {
+		var matchedUsernames = 0;
+		snapshot.forEach(function(data) {
+			const user = data.val();
+			if (user.username !== undefined && user.username.startsWith(potentialUsername)) {
+				matchedUsernames += 1;
+			}
+		});
+
+		const uniqueUsername = potentialUsername + (matchedUsernames ? matchedUsernames.toString() : "");
+		console.log(uniqueUsername);
+		return ref.child(id).child("username").set(uniqueUsername);
+	});
+});

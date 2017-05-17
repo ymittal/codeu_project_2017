@@ -67,14 +67,11 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
     }
 
     @Override
-    public void signUp(String email, String password) {
+    public void signUp(final String email, String password) {
         boolean isValid = validateInput(email, password);
         if (!isValid) {
             return;
         }
-        // Create username from email address
-        int index = email.indexOf('@');
-        final String username = email.substring(0, index);
 
         view.showProgressDialog(R.string.progress_sign_up);
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -92,9 +89,12 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             Log.i(TAG, "signUp:success:" + currentUser.getUid());
 
+                            // creates fullName from email address
+                            String fullName = email.substring(0, email.indexOf('@'));
+
                             // saves new user to real-time database
-                            User newUser = new User(username);
-                            newUser.setFullName(username);
+                            User newUser = new User();
+                            newUser.setFullName(fullName);
                             addUser(currentUser.getUid(), newUser);
                         }
                     }
