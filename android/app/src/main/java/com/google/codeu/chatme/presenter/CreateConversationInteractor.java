@@ -15,5 +15,14 @@ public interface CreateConversationInteractor {
      *
      * @param conversation conversation object to add to database
      */
-    public void addConversation(Conversation conversation);
+    void addConversation(Conversation conversation);
+
+    /**
+     * First checks whether any of the existing conversations in the database have the same
+     * participants and then, accordingly, adds a new conversation or opens
+     * {@link com.google.codeu.chatme.view.message.MessagesActivity} for the existing one
+     *
+     * @param conversation conversation object to open the messages of
+     */
+    void openConversationMessages(Conversation conversation);
 }
