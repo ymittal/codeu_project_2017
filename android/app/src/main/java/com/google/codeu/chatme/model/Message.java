@@ -72,4 +72,8 @@ public final class Message {
             return DateTimeUtil.getReadableDate(lastMessageTime);
         }
     }
+
+    public void setTimeCreated(long timeCreated) {
+        this.timeCreated = timeCreated;
+    }
 }
