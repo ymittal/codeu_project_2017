@@ -26,7 +26,6 @@ import java.util.List;
 
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -57,7 +56,7 @@ public class UserPresenterTest {
         FirebaseDatabase dbInstance = mock(FirebaseDatabase.class, RETURNS_DEEP_STUBS);
         DatabaseReference childRef = mock(DatabaseReference.class);
         when(FirebaseDatabase.getInstance()).thenReturn(dbInstance);
-        when(dbInstance.getReference().child("users")).thenReturn(childRef);
+        when(dbInstance.getReference().child("users").orderByChild("fullName")).thenReturn(childRef);
         presenter.postConstruct();
 
         doAnswer(new Answer<Void>() {
@@ -92,23 +91,26 @@ public class UserPresenterTest {
         DataSnapshot dsUser1 = mock(DataSnapshot.class);
         User user1 = new User();
         user1.setId("id1");
+        user1.setFullName("B");
         when(dsUser1.getKey()).thenReturn(user1.getId());
         when(dsUser1.getValue(User.class)).thenReturn(user1);
 
         DataSnapshot dsCurrentUser = mock(DataSnapshot.class);
         User currentUser = new User();
         currentUser.setId(CURRENT_USER_ID);
+        currentUser.setFullName("B");
         when(dsCurrentUser.getKey()).thenReturn(CURRENT_USER_ID);
         when(dsCurrentUser.getValue(User.class)).thenReturn(currentUser);
 
         DataSnapshot dsUser2 = mock(DataSnapshot.class);
         User user2 = new User();
         user2.setId("id2");
+        user2.setFullName("A");
         when(dsUser2.getKey()).thenReturn(user2.getId());
         when(dsUser2.getValue(User.class)).thenReturn(user2);
 
-        users.add(dsUser1);
         users.add(dsUser2);
+        users.add(dsUser1);
         users.add(dsCurrentUser);
 
         return users;
