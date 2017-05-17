@@ -40,7 +40,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     public UserListAdapter(Context context) {
         this.userPresenter = new UserPresenter(this);
         this.userPresenter.postConstruct();
-        this.createConversationPresenter = new CreateConversationPresenter(this);
+        this.createConvPresenter = new CreateConversationPresenter(this);
         this.context = context;
     }
 
