@@ -11,8 +11,9 @@ admin.initializeApp(functions.config().firebase);
  * urls. Accepts a list of user ids in the post request body
  */
 exports.getUserDetails = functions.https.onRequest((request, response) => {
-	var ref = admin.database().ref("users");
+	const ref = admin.database().ref("users");
 	var result = {};
+	var ids = [];
 
 	if (typeof request.body.ids === 'string') {
 		ids = [request.body.ids]
@@ -21,7 +22,7 @@ exports.getUserDetails = functions.https.onRequest((request, response) => {
 	}
 
 	async.map(ids, function(id, callback) {
-		ref.orderByKey().equalTo(id).on("child_added", function(snapshot) {
+		ref.orderByKey().equalTo(id).once("child_added", function(snapshot) {
 			var data = snapshot.val();
 			result[id] = {
 				"fullName": data.fullName,
@@ -33,7 +34,7 @@ exports.getUserDetails = functions.https.onRequest((request, response) => {
 
 	}, function(err, contents) {
 		if (err) console.error(err);
-		console.log(result);
+		console.log(contents);
 		response.send(result);
 	});
 });
