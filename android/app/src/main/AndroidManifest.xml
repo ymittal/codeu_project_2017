@@ -10,13 +10,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
-
-        <activity android:name=".view.login.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+      
+        <activity android:name=".view.login.LoginActivity"></activity>
 
         <activity
             android:name=".view.tabs.TabsActivity"
@@ -35,7 +30,13 @@
         <activity
             android:name=".view.create.CreateConversationActivity"
             android:label="@string/title_activity_create_conversation" />
-    </application>
+        <activity android:name=".view.SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
 
 </manifest>

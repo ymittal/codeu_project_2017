@@ -246,7 +246,7 @@ public class ProfilePresenter implements ProfileInteractor {
      *
      * @param password new password
      */
-    private void updatePassword(String password) {
+    public void updatePassword(String password) {
         if (password.isEmpty()) {
             return;
         }
