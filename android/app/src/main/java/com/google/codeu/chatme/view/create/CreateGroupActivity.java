@@ -14,6 +14,7 @@ import android.widget.EditText;
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.presenter.CreateGroupPresenter;
+import com.google.codeu.chatme.view.adapter.ConversationListAdapter;
 import com.google.codeu.chatme.view.adapter.UserListAdapter;
 import com.google.codeu.chatme.view.message.MessagesActivity;
 import com.pkmmte.view.CircularImageView;
@@ -45,17 +46,18 @@ public class CreateGroupActivity extends AppCompatActivity implements
 
         // retrieves the conversation sent from UsersFragment
         Bundle extras = getIntent().getExtras();
-        conversation = (Conversation) extras.getSerializable(UserListAdapter.CONV_EXTRA);
+        conversation = (Conversation) extras.getSerializable(UserListAdapter.GROUP_CONV_EXTRA);
 
         presenter = new CreateGroupPresenter(this);
+        presenter.postConstruct();
 
-        initializeUI();
+        setupUI();
     }
 
     /**
      * Initializes view elements
      */
-    private void initializeUI() {
+    private void setupUI() {
         btnStartGroup = (Button) findViewById(R.id.btnStartGroup);
         etGroupName = (EditText) findViewById(R.id.etGroupName);
         ivGroupAvatar = (CircularImageView) findViewById(R.id.ivGroupAvatar);
@@ -116,9 +118,11 @@ public class CreateGroupActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void openMessageActivity(String conversationId) {
+    public void openMessageActivity() {
         Intent mIntent = new Intent(this, MessagesActivity.class);
-        mIntent.putExtra(UserListAdapter.CONV_ID_EXTRA, conversationId);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ConversationListAdapter.CONV_MESSAGES_EXTRA, conversation);
+        mIntent.putExtras(bundle);
         startActivity(mIntent);
     }
 

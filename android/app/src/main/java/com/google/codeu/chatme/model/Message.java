@@ -6,8 +6,10 @@ import com.google.codeu.chatme.utility.DateTimeUtil;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 @IgnoreExtraProperties
-public final class Message {
+public final class Message implements Serializable {
 
     public String id;
     public String author;

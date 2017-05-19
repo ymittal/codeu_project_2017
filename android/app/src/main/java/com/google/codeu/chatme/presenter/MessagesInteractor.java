@@ -2,10 +2,8 @@ package com.google.codeu.chatme.presenter;
 
 import com.google.codeu.chatme.model.Message;
 
-/**
- * In accordance with Interactor Design Pattern, this interface provides function(s)
- * used for messaging in a particular conversation
- */
+import java.util.List;
+
 public interface MessagesInteractor {
 
     /**
@@ -21,4 +19,12 @@ public interface MessagesInteractor {
      * @param newMessage {@link Message} object to be added
      */
     void sendMessage(Message newMessage);
+
+    /**
+     * Retrieves {@link com.google.codeu.chatme.model.PublicUserDetails} for each of the
+     * conversation participants to facilitate in displaying their full names
+     *
+     * @param participants list of conversation participants
+     */
+    void getParticipantDetails(List<String> participants);
 }

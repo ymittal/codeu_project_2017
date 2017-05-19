@@ -2,6 +2,7 @@ package com.google.codeu.chatme.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,14 +32,11 @@ import java.util.List;
 public class ConversationListAdapter extends RecyclerView.Adapter<ConversationListAdapter.ViewHolder>
         implements ConversationListAdapterView {
 
-    public static final String CONV_ID_EXTRA = "CONV_ID_EXTRA";
+    public static final String CONV_MESSAGES_EXTRA = "conversation messages extra";
+
     private final Context context;
 
-    /**
-     * List of conversations to display in the list
-     */
     private List<Conversation> conversations = new ArrayList<>();
-
     private ConversationsPresenter presenter;
 
     /**
@@ -49,6 +47,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
 
     public ConversationListAdapter(Context context) {
         this.presenter = new ConversationsPresenter(this);
+        this.presenter.postConstruct();
         this.context = context;
     }
 
@@ -95,7 +94,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openMessagesActivity(view.getContext(), conversation.getId());
+                openMessagesActivity(view.getContext(), conversation);
             }
         });
     }
@@ -117,12 +116,14 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     /**
      * Launches {@link MessagesActivity} for the specific conversation
      *
-     * @param context        context to create a startActivity intent
-     * @param conversationId id of conversation to display messages of
+     * @param context      context to create a startActivity intent
+     * @param conversation conversation to display messages of
      */
-    private void openMessagesActivity(Context context, String conversationId) {
+    private void openMessagesActivity(Context context, Conversation conversation) {
         Intent mIntent = new Intent(context, MessagesActivity.class);
-        mIntent.putExtra(CONV_ID_EXTRA, conversationId);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CONV_MESSAGES_EXTRA, conversation);
+        mIntent.putExtras(bundle);
         context.startActivity(mIntent);
     }
 

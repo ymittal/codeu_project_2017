@@ -41,8 +41,7 @@ import java.util.List;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder>
         implements UserListAdapterView {
 
-    public static final String CONV_ID_EXTRA = "CONV_ID_EXTRA";
-    public static final String CONV_EXTRA = "CONV_EXTRA";
+    public static final String GROUP_CONV_EXTRA = "create group conversation extra";
 
     private List<User> users = new ArrayList<>();
 
@@ -106,9 +105,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     @Override
-    public void openMessageActivity(String conversationId) {
+    public void openMessageActivity(Conversation conversation) {
         Intent mIntent = new Intent(context, MessagesActivity.class);
-        mIntent.putExtra(CONV_ID_EXTRA, conversationId);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ConversationListAdapter.CONV_MESSAGES_EXTRA, conversation);
+        mIntent.putExtras(bundle);
         context.startActivity(mIntent);
     }
 
@@ -116,7 +117,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     public void openCreateGroupActivity(Conversation conversation) {
         Intent mIntent = new Intent(context, CreateGroupActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CONV_EXTRA, conversation);
+        bundle.putSerializable(GROUP_CONV_EXTRA, conversation);
         mIntent.putExtras(bundle);
         context.startActivity(mIntent);
     }

@@ -25,13 +25,18 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
 
     private final CreateGroupView view;
 
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mRootRef;
 
     /**
      * @param view view object
      */
     public CreateGroupPresenter(CreateGroupView view) {
         this.view = view;
+    }
+
+    @javax.annotation.PostConstruct
+    public void postConstruct() {
+        mRootRef = FirebaseDatabase.getInstance().getReference();
     }
 
     @SuppressWarnings("VisibleForTests")
@@ -48,7 +53,7 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
                         String downloadUrl = taskSnapshot.getDownloadUrl().toString();
                         Log.i(TAG, "uploadGroupPicture:success:downloadUrl " + downloadUrl);
                         updateGroupPhotoUrl(downloadUrl, conversationId);
-                        view.openMessageActivity(conversationId);
+                        view.openMessageActivity();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -77,7 +82,7 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
                             if (picData != null) {
                                 uploadGroupPictureToStorage(picData, conversationId);
                             } else {
-                                view.openMessageActivity(conversationId);
+                                view.openMessageActivity();
                             }
                         }
                     }

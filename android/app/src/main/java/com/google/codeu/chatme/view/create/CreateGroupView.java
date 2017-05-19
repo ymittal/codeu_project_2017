@@ -5,10 +5,8 @@ public interface CreateGroupView {
 
     /**
      * Launches MessageActivity for the specific group conversation
-     *
-     * @param conversationId conversation id
      */
-    void openMessageActivity(String conversationId);
+    void openMessageActivity();
 
     /**
      * Shows progress loader with the given message

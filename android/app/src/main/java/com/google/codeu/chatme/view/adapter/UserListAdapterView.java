@@ -21,9 +21,9 @@ public interface UserListAdapterView {
     /**
      * Launches MessagesActivity for the specific conversation
      *
-     * @param conversationId id of conversation to display messages of
+     * @param conversation conversation to display messages of
      */
-    void openMessageActivity(String conversationId);
+    void openMessageActivity(Conversation conversation);
 
     /**
      * Launches CreateGroupActivity for conversation passed as param

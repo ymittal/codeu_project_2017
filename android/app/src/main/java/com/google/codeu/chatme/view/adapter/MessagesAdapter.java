@@ -12,17 +12,19 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.google.codeu.chatme.R;
+import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.Message;
+import com.google.codeu.chatme.model.PublicUserDetails;
 import com.google.codeu.chatme.presenter.MessagesPresenter;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder>
         implements MessagesAdapterView {
-
     /**
      * List of messages
      */
@@ -31,9 +33,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     private MessagesPresenter presenter;
     private Context context;
 
-    public MessagesAdapter(Context context) {
+    private Conversation conversation;
+    private HashMap<String, PublicUserDetails> participantDetailsMap;
+
+    public MessagesAdapter(Context context, Conversation conversation) {
         this.presenter = new MessagesPresenter(this);
+        this.presenter.postConstruct();
+
         this.context = context;
+        this.conversation = conversation;
+
+        if (conversation.getIsGroup()) {
+            presenter.getParticipantDetails(conversation.getParticipants());
+        }
     }
 
     @Override
@@ -61,6 +73,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             holder.cvMessage.setLayoutParams(params);
+
+            if (participantDetailsMap != null && conversation.getIsGroup()) {
+                PublicUserDetails pDetails = participantDetailsMap.get(message.getAuthor());
+                holder.tvSender.setVisibility(View.VISIBLE);
+                holder.tvSender.setText(pDetails.getFullName());
+            }
         }
     }
 
@@ -83,17 +101,25 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    @Override
+    public void setParticipantDetailsMap(HashMap<String, PublicUserDetails> body) {
+        this.participantDetailsMap = body;
+        notifyDataSetChanged();
+    }
+
     /**
      * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
      * various views of a message item
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView tvSender;
         private TextView tvMessage;
         private CardView cvMessage;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            tvSender = (TextView) itemView.findViewById(R.id.tvSender);
             tvMessage = (TextView) itemView.findViewById(R.id.tvMessage);
             cvMessage = (CardView) itemView.findViewById(R.id.cvMessage);
         }

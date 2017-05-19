@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.codeu.chatme.R;
+import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.Message;
 import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.view.adapter.ConversationListAdapter;
@@ -23,12 +24,13 @@ import com.google.codeu.chatme.view.adapter.MessagesAdapter;
 public class MessagesActivity extends AppCompatActivity
         implements View.OnClickListener {
 
-    private String conversationId;
-
     private EditText etTypeMessage;
     private ImageView btnSend;
     private RecyclerView rvMessageList;
+
     private MessagesAdapter messagesAdapter;
+
+    private Conversation conversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,8 @@ public class MessagesActivity extends AppCompatActivity
         // sets activity background (does not resize when keyboard opens)
         getWindow().setBackgroundDrawableResource(R.drawable.messages_bg);
 
-        conversationId = getIntent().getStringExtra(ConversationListAdapter.CONV_ID_EXTRA);
+        Bundle bundle = getIntent().getExtras();
+        conversation = (Conversation) bundle.getSerializable(ConversationListAdapter.CONV_MESSAGES_EXTRA);
 
         setupUI();
     }
@@ -58,12 +61,12 @@ public class MessagesActivity extends AppCompatActivity
         etTypeMessage.addTextChangedListener(messageTextWatcher);
 
         rvMessageList = (RecyclerView) findViewById(R.id.rvMessageList);
-        messagesAdapter = new MessagesAdapter(getApplicationContext());
+        messagesAdapter = new MessagesAdapter(getApplicationContext(), conversation);
 
         rvMessageList.setLayoutManager(new LinearLayoutManager(this));
         rvMessageList.setAdapter(messagesAdapter);
 
-        messagesAdapter.loadConversations(conversationId);
+        messagesAdapter.loadConversations(conversation.getId());
     }
 
     @Override
@@ -83,10 +86,10 @@ public class MessagesActivity extends AppCompatActivity
      */
     public Message createMessageObject() {
         String author = FirebaseUtil.getCurrentUserUid();
-        String conversation = conversationId;
+        String conversationId = conversation.getId();
         String content = etTypeMessage.getText().toString();
 
-        Message newMessage = new Message(author, content, conversation);
+        Message newMessage = new Message(author, content, conversationId);
         return newMessage;
     }
 

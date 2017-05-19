@@ -40,7 +40,8 @@ public class CreateConversationPresenter implements CreateConversationInteractor
                             Log.w(TAG, "addConversation:failure " + databaseError.getMessage());
                         } else {
                             Log.i(TAG, "addConversation:success " + conversationId);
-                            view.openMessageActivity(conversationId);
+                            conversation.setId(conversationId);
+                            view.openMessageActivity(conversation);
                         }
                     }
                 });
@@ -60,7 +61,7 @@ public class CreateConversationPresenter implements CreateConversationInteractor
                     HashSet participants = new HashSet(conv.getParticipants());
                     if (participantsSet.equals(participants)) {
                         conv.setId(data.getKey());
-                        view.openMessageActivity(conv.getId());
+                        view.openMessageActivity(conv);
                         return;
                     }
                 }

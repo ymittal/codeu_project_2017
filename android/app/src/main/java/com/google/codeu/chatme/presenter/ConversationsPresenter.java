@@ -35,22 +35,21 @@ import retrofit2.Response;
 public class ConversationsPresenter implements ConversationsInteractor {
 
     private static final String TAG = ConversationsPresenter.class.getName();
-    /**
-     * {@link ConversationListAdapter} reference to update list of conversations
-     */
-    private final ConversationListAdapter view;
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 
-    /**
-     * Constructor to accept a reference to a recycler view adapter to bind
-     * conversation data to views
-     *
-     * @param view {@link ConversationListAdapter} reference
-     */
+    private final ConversationListAdapter view;
+
+    private DatabaseReference mRootRef;
+
     public ConversationsPresenter(ConversationListAdapter view) {
         this.view = view;
     }
 
+    @javax.annotation.PostConstruct
+    public void postConstruct() {
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Override
     public void loadConversations() {
         Query conversationsQuery = mRootRef.child("conversations").orderByChild("lastMessage").startAt("");
         conversationsQuery.addValueEventListener(new ValueEventListener() {
@@ -97,9 +96,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
     /**
      * Retrieves a hash map which maps user ids to their details such as full name and pic urls.
      * Uses Retrofit to make an API call to Firebase Functions (backend) by "posting" a list of user
-     * ids. Then, updates view by resetting {@link ConversationListAdapter#setParticipantDetailsMap(HashMap)}
-     * <p>
-     * Note: This function would need to altered if and when "groups" feature is introduced
+     * ids. Then, updates view by resetting participantDetailsMap
      *
      * @param conversations list of conversations
      */

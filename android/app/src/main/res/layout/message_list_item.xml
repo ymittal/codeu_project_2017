@@ -20,14 +20,31 @@
         app:contentPaddingRight="8dp"
         app:contentPaddingTop="4dp">
 
-        <TextView
-            android:id="@+id/tvMessage"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="296dp"
-            android:text="Hello, how are you?"
-            android:textColor="@color/messages"
-            android:textSize="16sp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvSender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="296dp"
+                android:text="Sender"
+                android:textColor="@color/messages"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="296dp"
+                android:text="Hello, how are you?"
+                android:textColor="@color/messages"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
