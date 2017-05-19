@@ -105,9 +105,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     private ModalMultiSelectorCallback mCreateGroupMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            super.onCreateActionMode(actionMode, menu);
-            actionMode.getMenuInflater().inflate(R.menu.user_list_item_context, menu);
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            super.onCreateActionMode(mode, menu);
+            mode.getMenuInflater().inflate(R.menu.user_list_item_context, menu);
             return true;
         }
 
@@ -174,10 +174,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-            if (!mMultiSelector.tapSelection(ViewHolder.this)) {
-                // do whatever we want to do when not in selection mode
-                // perhaps navigate to a detail screen
-
+            // when no items have been long tapped on
+            if (!mMultiSelector.tapSelection(this)) {
                 // creates a new conversation object and add recipient as a participant
                 Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
                 conv.addParticipant(userId);
@@ -191,9 +189,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         @Override
         public boolean onLongClick(View view) {
-            ((AppCompatActivity) context).startSupportActionMode(mCreateGroupMode);
-            mMultiSelector.setSelected(ViewHolder.this, false);
-            return true;
+            if (!mMultiSelector.isSelectable()) {
+                ((AppCompatActivity) context).startSupportActionMode(mCreateGroupMode);
+                mMultiSelector.setSelectable(true);
+                mMultiSelector.setSelected(ViewHolder.this, true);
+                return true;
+            }
+            return false;
         }
     }
 }
