@@ -83,11 +83,6 @@ public final class User {
     }
 
     @Exclude
-    public boolean isOnline() {
-        return this.isOnline;
-    }
-
-    @Exclude
     public String getReadableLastSeen(Context context) {
         long differenceInMillis = System.currentTimeMillis() - lastSeen;
         assert differenceInMillis > 0;
