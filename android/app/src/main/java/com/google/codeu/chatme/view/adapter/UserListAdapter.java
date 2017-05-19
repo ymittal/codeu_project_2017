@@ -57,6 +57,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final User user = users.get(position);
+        holder.setUserId(user.getId());
 
         holder.setHolderPicture(user.getPhotoUrl());
         if (user.getFullName() != null) {
@@ -65,18 +66,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             holder.tvName.setText(user.getUsername());
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // creates a new conversation object and add recipient as a participant
-                Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
-                conv.addParticipant(user.getId());
-
-                // checks for conversation duplicates and then attempts to add a conversation object
-                // or launch Message Activity straight away
-                createConvPresenter.openConversationMessages(conv);
-            }
-        });
+        if (user.getIsOnline()) {
+            holder.tvLastSeen.setText("Online");
+        } else {
+            holder.tvLastSeen.setText(user.getReadableLastSeen(context));
+        }
     }
 
     @Override
@@ -101,16 +95,26 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
      * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
      * various views of a user list item
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvName;
+        private TextView tvLastSeen;
         private CircularImageView civUserPic;
+
+        private String userId;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
+            itemView.setOnClickListener(this);
+
             tvName = (TextView) itemView.findViewById(R.id.tvName);
+            tvLastSeen = (TextView) itemView.findViewById(R.id.tvLastSeen);
             civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
+        }
+
+        private void setUserId(String uid) {
+            userId = uid;
         }
 
         private void setHolderPicture(String picUrl) {
@@ -127,6 +131,16 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
                         .placeholder(R.drawable.placeholder_person)
                         .into(this.civUserPic);
             }
+        }
+
+        @Override
+        public void onClick(View view) {
+            // creates a new conversation object and add recipient as a participant
+            Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
+            conv.addParticipant(userId);
+
+            // checks for conversation duplicates and adds a conversation only if unique
+            createConvPresenter.openConversationMessages(conv);
         }
     }
 }
