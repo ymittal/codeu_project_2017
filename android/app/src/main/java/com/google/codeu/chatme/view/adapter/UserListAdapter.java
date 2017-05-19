@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
 import com.bignerdranch.android.multiselector.MultiSelector;
@@ -123,7 +124,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
                         conv.addParticipant(users.get(i).getId());
                     }
                 }
-                createConvPresenter.addConversation(conv);
+                if (conv.getParticipants().size() >= Conversation.MIN_CONV_PARTICIPANTS) {
+                    createConvPresenter.addConversation(conv);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.min_conv_participants), Toast.LENGTH_SHORT).show();
+                }
 
                 mMultiSelector.clearSelections();
                 return true;

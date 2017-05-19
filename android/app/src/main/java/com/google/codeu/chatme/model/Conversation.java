@@ -10,6 +10,8 @@ import java.util.List;
 @IgnoreExtraProperties
 public final class Conversation {
 
+    public static final int MIN_CONV_PARTICIPANTS = 2;
+
     private String id;
     private String owner;
     private long timeCreated;
