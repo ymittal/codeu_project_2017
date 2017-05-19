@@ -37,4 +37,19 @@
     <string name="create_group">Create Group</string>
     <string name="start_group">Start Group</string>
     <string name="min_conv_participants">Please add at least one group member</string>
+
+    <string name="less_than_a_min">less than a minute</string>
+    <string name="last_seen_at">last seen at %1$s</string>
+    <string name="last_seen_ago">last seen %1$s ago</string>
+    <string name="last_seen_on">last seen on %1$s</string>
+    <string name="sign_out_failure">Sign out failed! Try again later.</string>
+
+    <plurals name="number_mins">
+        <item quantity="one">a min</item>
+        <item quantity="other">%d mins</item>
+    </plurals>
+    <plurals name="number_hrs">
+        <item quantity="one">an hr</item>
+        <item quantity="other">%d hrs</item>
+    </plurals>
 </resources>

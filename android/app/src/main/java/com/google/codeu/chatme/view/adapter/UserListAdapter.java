@@ -77,7 +77,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        User user = users.get(position);
+        final User user = users.get(position);
         holder.setUserId(user.getId());
 
         holder.setHolderPicture(user.getPhotoUrl());
@@ -85,6 +85,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             holder.tvName.setText(user.getFullName());
         } else {
             holder.tvName.setText(user.getUsername());
+        }
+
+        if (user.getIsOnline()) {
+            holder.tvLastSeen.setText("Online");
+        } else {
+            holder.tvLastSeen.setText(user.getReadableLastSeen(context));
         }
     }
 
@@ -123,7 +129,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             View.OnLongClickListener {
 
         private TextView tvName;
+        private TextView tvLastSeen;
         private CircularImageView civUserPic;
+
         private String userId;
 
         public ViewHolder(View itemView) {
@@ -135,7 +143,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             itemView.setOnLongClickListener(this);
             itemView.setOnClickListener(this);
 
+            itemView.setOnClickListener(this);
+
             tvName = (TextView) itemView.findViewById(R.id.tvName);
+            tvLastSeen = (TextView) itemView.findViewById(R.id.tvLastSeen);
             civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
         }
 

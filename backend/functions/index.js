@@ -13,6 +13,7 @@ admin.initializeApp(functions.config().firebase);
 exports.getUserDetails = functions.https.onRequest((request, response) => {
 	var ref = admin.database().ref("users");
 	var result = {};
+	var ids = [];
 
 	if (typeof request.body.ids === 'string') {
 		ids = [request.body.ids]
@@ -21,7 +22,7 @@ exports.getUserDetails = functions.https.onRequest((request, response) => {
 	}
 
 	async.map(ids, function(id, callback) {
-		ref.orderByKey().equalTo(id).on("child_added", function(snapshot) {
+		ref.orderByKey().equalTo(id).once("child_added", function(snapshot) {
 			var data = snapshot.val();
 			result[id] = {
 				"fullName": data.fullName,
@@ -33,7 +34,7 @@ exports.getUserDetails = functions.https.onRequest((request, response) => {
 
 	}, function(err, contents) {
 		if (err) console.error(err);
-		console.log(result);
+		console.log(contents);
 		response.send(result);
 	});
 });
@@ -52,3 +53,29 @@ exports.updateMostRecentMessage = functions.database.ref('/messages/{messageId}'
 
 		return ref.child(message.conversation).child("lastMessage").set(message);
 	});
+
+/**
+ * Sets a unique username for the newly created user
+ */
+exports.setUniqueUsername = functions.auth.user().onCreate(event => {
+	var ref = admin.database().ref("users");
+
+	const id = event.data.uid;
+	const email = event.data.email;
+	// string before '@' symbol with trailing digits removed
+	const potentialUsername = email.substring(0, email.indexOf('@')).replace(/\d+$/, '');
+
+	ref.once("value", function(snapshot) {
+		var matchedUsernames = 0;
+		snapshot.forEach(function(data) {
+			const user = data.val();
+			if (user.username !== undefined && user.username.startsWith(potentialUsername)) {
+				matchedUsernames += 1;
+			}
+		});
+
+		const uniqueUsername = potentialUsername + (matchedUsernames ? matchedUsernames.toString() : "");
+		console.log(uniqueUsername);
+		return ref.child(id).child("username").set(uniqueUsername);
+	});
+});

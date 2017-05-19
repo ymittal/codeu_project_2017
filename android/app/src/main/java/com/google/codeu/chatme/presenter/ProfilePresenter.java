@@ -20,7 +20,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DatabaseReference.CompletionListener;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -82,7 +84,7 @@ public class ProfilePresenter implements ProfileInteractor {
      */
     public void getUserProfile() {
         mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -157,7 +159,27 @@ public class ProfilePresenter implements ProfileInteractor {
      * Signs out current user
      */
     public void signOut() {
-        mAuth.signOut();
+        final DatabaseReference userRef = mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid());
+
+        userRef.child("isOnline").setValue(Boolean.FALSE, new CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    userRef.child("lastSeen").setValue(ServerValue.TIMESTAMP, new CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError == null) {
+                                mAuth.signOut();
+                            } else {
+                                view.makeToast(R.string.sign_out_failure);
+                            }
+                        }
+                    });
+                } else {
+                    view.makeToast(R.string.sign_out_failure);
+                }
+            }
+        });
     }
 
     /**

@@ -70,25 +70,25 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
                 PublicUserDetails pDetails = participantDetailsMap.get(participantId);
 
                 holder.tvSender.setText(pDetails.getFullName());
-                holder.setHolderPicture(pDetails.getPhotoUrl());
+                holder.setHolderPicture(pDetails.getPhotoUrl(), Boolean.FALSE);
                 holder.tvLastMessage.setText(conversation.getLastMessageContent());
             } else {
                 String lastSenderId = conversation.getLastMessage().getAuthor();
                 String lastSenderName = participantDetailsMap.get(lastSenderId).getFullName();
 
                 holder.tvSender.setText(conversation.getGroupName());
-                holder.setHolderPicture(conversation.getPhotoUrl());
+                holder.setHolderPicture(conversation.getPhotoUrl(), Boolean.TRUE);
                 holder.tvLastMessage.setText(lastSenderName + ": "
                         + conversation.getLastMessageContent());
             }
         } else {
             // http getDetailsFromIds has not completed yet
-            holder.setHolderPicture(null);
+            holder.setHolderPicture(null, conversation.getIsGroup());
             if (!conversation.getIsGroup()) {
                 holder.tvLastMessage.setText(conversation.getLastMessageContent());
             } else {
                 holder.tvSender.setText(conversation.getGroupName());
-                holder.setHolderPicture(conversation.getPhotoUrl());
+                holder.setHolderPicture(conversation.getPhotoUrl(), Boolean.TRUE);
             }
         }
 
@@ -171,18 +171,25 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
             civPic = (CircularImageView) itemView.findViewById(R.id.civPic);
         }
 
-        private void setHolderPicture(String picUrl) {
+        private void setHolderPicture(String picUrl, boolean isGroup) {
+            int placeholderImage;
+            if (isGroup) {
+                placeholderImage = R.drawable.placeholder_group;
+            } else {
+                placeholderImage = R.drawable.placeholder_person;
+            }
+
             if (picUrl != null && !picUrl.isEmpty()) {
                 Picasso.with(context)
                         .load(picUrl)
-                        .placeholder(R.drawable.placeholder_person)
-                        .error(R.drawable.placeholder_person)
+                        .placeholder(placeholderImage)
+                        .error(placeholderImage)
                         .fit()
                         .into(this.civPic);
             } else {
                 Picasso.with(context)
-                        .load(R.drawable.placeholder_person)
-                        .placeholder(R.drawable.placeholder_person)
+                        .load(placeholderImage)
+                        .placeholder(placeholderImage)
                         .into(this.civPic);
             }
         }

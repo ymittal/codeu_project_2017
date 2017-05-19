@@ -60,6 +60,7 @@ dependencies {
     testCompile 'org.powermock:powermock:1.6.5'
     testCompile 'org.powermock:powermock-module-junit4:1.6.5'
     testCompile 'org.powermock:powermock-api-mockito:1.6.5'
+    androidTestCompile 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'

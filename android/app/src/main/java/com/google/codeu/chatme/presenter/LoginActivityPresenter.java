@@ -7,14 +7,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.User;
+import com.google.codeu.chatme.utility.FirebaseUtil;
 import com.google.codeu.chatme.view.login.LoginActivity;
 import com.google.codeu.chatme.view.login.LoginView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Following MVP design pattern, this class encapsulates the functionality to
@@ -58,6 +62,7 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    setOnlineStatus();
                     view.openTabsActivity();
                 } else {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -66,15 +71,46 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
         };
     }
 
+    /**
+     * Sets a user's online status when they open the app on their device(s). Also sets up
+     * {@link DatabaseReference#onDisconnect()} triggers to update the status and set last seen
+     * time when they close the app
+     */
+    private void setOnlineStatus() {
+        final DatabaseReference isOnlineRef = mRootRef.child("users")
+                .child(FirebaseUtil.getCurrentUserUid()).child("isOnline");
+
+        final DatabaseReference lastSeenRef = mRootRef.child("users")
+                .child(FirebaseUtil.getCurrentUserUid()).child("lastSeen");
+
+        FirebaseDatabase.getInstance().getReference(".info/connected")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        boolean connected = snapshot.getValue(Boolean.class);
+                        if (connected) {
+                            isOnlineRef.setValue(Boolean.TRUE);
+                            isOnlineRef.onDisconnect().setValue(Boolean.FALSE);
+                            lastSeenRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
+                        } else {
+                            isOnlineRef.setValue(Boolean.FALSE);
+                            lastSeenRef.setValue(ServerValue.TIMESTAMP);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.e(TAG, "setOnlineStatus:onCancelled " + error.getMessage());
+                    }
+                });
+    }
+
     @Override
-    public void signUp(String email, String password) {
+    public void signUp(final String email, String password) {
         boolean isValid = validateInput(email, password);
         if (!isValid) {
             return;
         }
-        // Create username from email address
-        int index = email.indexOf('@');
-        final String username = email.substring(0, index);
 
         view.showProgressDialog(R.string.progress_sign_up);
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -92,9 +128,12 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             Log.i(TAG, "signUp:success:" + currentUser.getUid());
 
+                            // creates fullName from email address
+                            String fullName = email.substring(0, email.indexOf('@'));
+
                             // saves new user to real-time database
-                            User newUser = new User(username);
-                            newUser.setFullName(username);
+                            User newUser = new User();
+                            newUser.setFullName(fullName);
                             addUser(currentUser.getUid(), newUser);
                         }
                     }
