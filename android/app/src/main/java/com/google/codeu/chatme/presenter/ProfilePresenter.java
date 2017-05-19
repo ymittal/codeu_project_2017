@@ -82,7 +82,7 @@ public class ProfilePresenter implements ProfileInteractor {
      */
     public void getUserProfile() {
         mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

@@ -12,6 +12,7 @@ public final class User {
     private String photoUrl;
 
     public User() {
+        this.timeCreated = System.currentTimeMillis();
     }
 
     public User(String username) {
