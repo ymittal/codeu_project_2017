@@ -15,21 +15,18 @@ import java.util.HashSet;
 public class CreateConversationPresenter implements CreateConversationInteractor {
 
     private static final String TAG = CreateConversationPresenter.class.getName();
-    /**
-     * {@link UserListAdapter} reference to update list of conversations
-     */
+
     private final UserListAdapter view;
 
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mRootRef;
 
-    /**
-     * Constructor to accept a reference to a recycler view adapter to bind
-     * conversation data to views
-     *
-     * @param view {@link UserListAdapter} reference
-     */
     public CreateConversationPresenter(UserListAdapter view) {
         this.view = view;
+    }
+
+    @javax.annotation.PostConstruct
+    public void postConstruct() {
+        mRootRef = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -51,7 +48,6 @@ public class CreateConversationPresenter implements CreateConversationInteractor
 
     @Override
     public void openConversationMessages(final Conversation conversation) {
-        // TODO: probably rename this back to addConversation
         mRootRef.child("conversations").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

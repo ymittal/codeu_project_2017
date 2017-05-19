@@ -10,13 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.presenter.CreateGroupPresenter;
 import com.google.codeu.chatme.view.adapter.UserListAdapter;
 import com.google.codeu.chatme.view.message.MessagesActivity;
+import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 public class CreateGroupActivity extends AppCompatActivity implements
@@ -30,7 +30,7 @@ public class CreateGroupActivity extends AppCompatActivity implements
 
     private Button btnStartGroup;
     private EditText etGroupName;
-    private ImageView ivGroupAvatar;
+    private CircularImageView ivGroupAvatar;
 
     private Conversation conversation;
     private Uri picData = null;
@@ -58,10 +58,15 @@ public class CreateGroupActivity extends AppCompatActivity implements
     private void initializeUI() {
         btnStartGroup = (Button) findViewById(R.id.btnStartGroup);
         etGroupName = (EditText) findViewById(R.id.etGroupName);
-        ivGroupAvatar = (ImageView) findViewById(R.id.ivGroupAvatar);
+        ivGroupAvatar = (CircularImageView) findViewById(R.id.ivGroupAvatar);
 
         btnStartGroup.setOnClickListener(this);
         ivGroupAvatar.setOnClickListener(this);
+
+        Picasso.with(this)
+                .load(R.drawable.placeholder_person)
+                .placeholder(R.drawable.placeholder_person)
+                .into(ivGroupAvatar);
     }
 
     @Override

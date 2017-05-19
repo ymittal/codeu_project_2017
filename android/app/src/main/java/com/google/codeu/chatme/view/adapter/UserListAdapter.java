@@ -46,17 +46,22 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
     private List<User> users = new ArrayList<>();
 
-    private final Context context;
+    /**
+     * Multi-selector to select multiple user list items
+     */
+    private MultiSelector mMultiSelector = new MultiSelector();
 
     private CreateConversationPresenter createConvPresenter;
     private UserPresenter userPresenter;
 
-    private MultiSelector mMultiSelector = new MultiSelector();
+    private final Context context;
 
     public UserListAdapter(Context context) {
-        this.userPresenter = new UserPresenter(this);
-        this.userPresenter.postConstruct();
-        this.createConvPresenter = new CreateConversationPresenter(this);
+        userPresenter = new UserPresenter(this);
+        userPresenter.postConstruct();
+        createConvPresenter = new CreateConversationPresenter(this);
+        createConvPresenter.postConstruct();
+
         this.context = context;
     }
 
@@ -101,6 +106,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         context.startActivity(mIntent);
     }
 
+    @Override
     public void openCreateGroupActivity(Conversation conversation) {
         Intent mIntent = new Intent(context, CreateGroupActivity.class);
         Bundle bundle = new Bundle();
@@ -108,40 +114,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         mIntent.putExtras(bundle);
         context.startActivity(mIntent);
     }
-
-    private ModalMultiSelectorCallback mCreateGroupMode = new ModalMultiSelectorCallback(mMultiSelector) {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            super.onCreateActionMode(mode, menu);
-            mode.getMenuInflater().inflate(R.menu.user_list_item_context, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
-            if (menuItem.getItemId() == R.id.menu_item_create_group) {
-                mode.finish();
-
-                Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
-                conv.setIsGroup(true);
-                for (int i = users.size() - 1; i >= 0; i--) {
-                    if (mMultiSelector.isSelected(i, 0)) {
-                        conv.addParticipant(users.get(i).getId());
-                    }
-                }
-                if (conv.getParticipants().size() >= Conversation.MIN_CONV_PARTICIPANTS) {
-                    openCreateGroupActivity(conv);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.min_conv_participants),
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                return true;
-            }
-            return false;
-        }
-    };
 
     /**
      * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
@@ -212,7 +184,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         @Override
         public boolean onLongClick(View view) {
             if (!mMultiSelector.isSelectable()) {
-                ((AppCompatActivity) context).startSupportActionMode(mCreateGroupMode);
+                ((AppCompatActivity) context).startSupportActionMode(selectorCallback);
                 mMultiSelector.setSelectable(true);
                 mMultiSelector.setSelected(ViewHolder.this, true);
                 return true;
@@ -220,4 +192,50 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             return false;
         }
     }
+
+    /**
+     * Callback to handle clicks on contextual action bar which pops up when a user list item
+     * is long tapped on
+     */
+    private ModalMultiSelectorCallback selectorCallback = new ModalMultiSelectorCallback(mMultiSelector) {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            super.onCreateActionMode(mode, menu);
+            mode.getMenuInflater().inflate(R.menu.user_list_item_context, menu);
+            return true;
+        }
+
+        /**
+         * Launches CreateGroupActivity if create group item was clicked and at least
+         * one user was selected
+         *
+         * @param mode
+         * @param menuItem menu item clicked
+         * @return true if click is handled properly
+         */
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
+            if (menuItem.getItemId() == R.id.menu_item_create_group) {
+                mode.finish();
+
+                Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
+                conv.setIsGroup(true);
+                for (int i = users.size() - 1; i >= 0; i--) {
+                    if (mMultiSelector.isSelected(i, 0)) {
+                        conv.addParticipant(users.get(i).getId());
+                    }
+                }
+                if (conv.getParticipants().size() >= Conversation.MIN_CONV_PARTICIPANTS) {
+                    openCreateGroupActivity(conv);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.min_conv_participants),
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+            }
+            return false;
+        }
+    };
 }

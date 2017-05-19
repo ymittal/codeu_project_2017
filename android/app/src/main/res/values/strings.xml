@@ -25,7 +25,7 @@
     <string name="progress_update_name">Updating full name</string>
     <string name="progress_update_pwd">Updating password</string>
     <string name="btn_add_group_participants">Add Group Participants</string>
-    <string name="et_name_your_new_group">Name Your New Group</string>
+    <string name="et_name_your_new_group">Group Name</string>
     <string name="et_full_name">Full Name</string>
     <string name="et_username">Username</string>
     <string name="et_change_password">Change Password</string>
