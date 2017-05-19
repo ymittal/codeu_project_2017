@@ -3,12 +3,13 @@ package com.google.codeu.chatme.model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 @IgnoreExtraProperties
-public final class Conversation {
+public final class Conversation implements Serializable {
 
     public static final int MIN_CONV_PARTICIPANTS = 2;
 

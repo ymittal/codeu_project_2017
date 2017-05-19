@@ -3,28 +3,32 @@ package com.google.codeu.chatme.presenter;
 
 import android.net.Uri;
 
-/**
- * In accordance with Interactor Design Pattern, this interface provides function(s)
- * which can be used to access Firebase database for data related to creating conversations for
- * the current user
- */
-public interface CreateGroupInteractor {
+import com.google.codeu.chatme.model.Conversation;
 
+public interface CreateGroupInteractor {
 
     /**
      * Uploads group avatar to Firebase Storage and then updates Database
      * with the picture download url
      *
-     * @param data           {@link Uri} containing new profile picture
-     * @param conversationId ID for group conversation
+     * @param data           {@link Uri} containing new group avatar
+     * @param conversationId group conversation id
      */
     void uploadGroupPictureToStorage(Uri data, String conversationId);
 
     /**
-     * Set the Group Name for the provided conversation
+     * Saves new group conversation to database
      *
-     * @param groupName      Name of group conversation
-     * @param conversationId ID for group conversation
+     * @param conversation conversation object to add to database
+     * @param picData      Uri containing group avatar (or null)
      */
-    void setGroupName(final String groupName, String conversationId);
+    void addGroupConversation(Conversation conversation, Uri picData);
+
+    /**
+     * Updates group avatar url in Firebase database
+     *
+     * @param downloadUri    new group avatar download url
+     * @param conversationId group conversation id
+     */
+    void updateGroupPhotoUrl(String downloadUri, String conversationId);
 }

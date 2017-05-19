@@ -10,8 +10,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.codeu.chatme.R;
-import com.google.codeu.chatme.utility.FirebaseUtil;
-import com.google.codeu.chatme.view.adapter.UserListAdapter;
+import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.view.create.CreateGroupView;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,31 +21,25 @@ import com.google.firebase.storage.UploadTask;
 
 public class CreateGroupPresenter implements CreateGroupInteractor {
 
-    private static final String TAG = ConversationsPresenter.class.getName();
-    /**
-     * {@link UserListAdapter} reference to update list of conversations
-     */
+    private static final String TAG = CreateGroupPresenter.class.getName();
+
     private final CreateGroupView view;
 
     private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
 
     /**
-     * Constructor to accept a reference to a recycler view adapter to bind
-     * conversation data to views
-     *
-     * @param view {@link CreateGroupView} reference
+     * @param view view object
      */
     public CreateGroupPresenter(CreateGroupView view) {
         this.view = view;
     }
-
 
     @SuppressWarnings("VisibleForTests")
     @Override
     public void uploadGroupPictureToStorage(final Uri data, final String conversationId) {
         view.showProgressDialog(R.string.progress_upload_pic);
         StorageReference filepath = FirebaseStorage.getInstance().getReference()
-                .child("group-pics").child(FirebaseUtil.getCurrentUserUid());
+                .child("group-pics").child(conversationId);
 
         filepath.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -54,8 +47,8 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         String downloadUrl = taskSnapshot.getDownloadUrl().toString();
                         Log.i(TAG, "uploadGroupPicture:success:downloadUrl " + downloadUrl);
-                        view.setGroupPicture(downloadUrl);
                         updateGroupPhotoUrl(downloadUrl, conversationId);
+                        view.openMessageActivity(conversationId);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -67,34 +60,34 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
     }
 
     @Override
-    public void setGroupName(final String groupName, String conversationId) {
-        if (groupName.isEmpty()) {
+    public void addGroupConversation(Conversation conversation, final Uri picData) {
+        if (conversation.getGroupName().isEmpty()) {
             return;
         }
 
-        mRootRef.child("conversations").child(conversationId)
-                .child("groupName").setValue(groupName, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    Log.e(TAG, "updateGroupName:failure " + databaseError.getMessage());
-                } else {
-                    Log.i(TAG, "updateGroupName:success set to " + groupName);
-                }
-            }
-        });
-        view.openMessageActivity(conversationId);
+        final String conversationId = mRootRef.child("conversations").push().getKey();
+        mRootRef.child("conversations").child(conversationId).setValue(conversation,
+                new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            Log.w(TAG, "addGroupConversation:failure " + databaseError.getMessage());
+                        } else {
+                            Log.i(TAG, "addGroupConversation:success " + conversationId);
+                            if (picData != null) {
+                                uploadGroupPictureToStorage(picData, conversationId);
+                            } else {
+                                view.openMessageActivity(conversationId);
+                            }
+                        }
+                    }
+                });
     }
 
-    /**
-     * Updates logged-in user's profile pic storage url
-     *
-     * @param downloadUri    new profile pic download url
-     * @param conversationId ID for group conversation
-     */
-    private void updateGroupPhotoUrl(String downloadUri, String conversationId) {
-        mRootRef.child("conversations").child(conversationId)
-                .child("photoUrl").setValue(downloadUri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+    @Override
+    public void updateGroupPhotoUrl(String downloadUri, String conversationId) {
+        mRootRef.child("conversations").child(conversationId).child("photoUrl")
+                .setValue(downloadUri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {

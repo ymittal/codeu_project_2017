@@ -43,11 +43,7 @@ public class CreateConversationPresenter implements CreateConversationInteractor
                             Log.w(TAG, "addConversation:failure " + databaseError.getMessage());
                         } else {
                             Log.i(TAG, "addConversation:success " + conversationId);
-                            if (conversation.getIsGroup()) {
-                                view.openCreateGroupActivity(conversationId);
-                            } else {
-                                view.openMessageActivity(conversationId);
-                            }
+                            view.openMessageActivity(conversationId);
                         }
                     }
                 });
@@ -55,6 +51,7 @@ public class CreateConversationPresenter implements CreateConversationInteractor
 
     @Override
     public void openConversationMessages(final Conversation conversation) {
+        // TODO: probably rename this back to addConversation
         mRootRef.child("conversations").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

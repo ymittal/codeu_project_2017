@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -35,13 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A {@link android.support.v7.widget.RecyclerView.Adapter} to bind the list of users
- * to the recyclerview in {@link com.google.codeu.chatme.view.tabs.UsersFragment}
+ * A RecyclerView Adapter to bind the list of users displayed in UsersFragment
  */
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder>
         implements UserListAdapterView {
 
     public static final String CONV_ID_EXTRA = "CONV_ID_EXTRA";
+    public static final String CONV_EXTRA = "CONV_EXTRA";
 
     private List<User> users = new ArrayList<>();
 
@@ -100,10 +101,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         context.startActivity(mIntent);
     }
 
-    @Override
-    public void openCreateGroupActivity(String conversationId) {
+    public void openCreateGroupActivity(Conversation conversation) {
         Intent mIntent = new Intent(context, CreateGroupActivity.class);
-        mIntent.putExtra(CONV_ID_EXTRA, conversationId);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CONV_EXTRA, conversation);
+        mIntent.putExtras(bundle);
         context.startActivity(mIntent);
     }
 
@@ -129,7 +131,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
                     }
                 }
                 if (conv.getParticipants().size() >= Conversation.MIN_CONV_PARTICIPANTS) {
-                    createConvPresenter.addConversation(conv);
+                    openCreateGroupActivity(conv);
                 } else {
                     Toast.makeText(context, context.getString(R.string.min_conv_participants),
                             Toast.LENGTH_SHORT).show();
