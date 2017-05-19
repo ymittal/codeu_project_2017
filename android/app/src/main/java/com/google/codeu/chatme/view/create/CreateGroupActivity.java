@@ -63,10 +63,28 @@ public class CreateGroupActivity extends AppCompatActivity implements
         btnStartGroup.setOnClickListener(this);
         ivGroupAvatar.setOnClickListener(this);
 
-        Picasso.with(this)
-                .load(R.drawable.placeholder_person)
-                .placeholder(R.drawable.placeholder_person)
-                .into(ivGroupAvatar);
+        setGroupAvatar(null);
+    }
+
+    /**
+     * Sets group avatar on the UI. If null, set the placeholder group avatar
+     *
+     * @param picData Uri containing group avatar data
+     */
+    private void setGroupAvatar(Uri picData) {
+        if (picData != null) {
+            Picasso.with(this)
+                    .load(picData)
+                    .placeholder(R.drawable.placeholder_group)
+                    .error(R.drawable.placeholder_group)
+                    .fit()
+                    .into(ivGroupAvatar);
+        } else {
+            Picasso.with(this)
+                    .load(R.drawable.placeholder_group)
+                    .placeholder(R.drawable.placeholder_group)
+                    .into(ivGroupAvatar);
+        }
     }
 
     @Override
@@ -92,12 +110,8 @@ public class CreateGroupActivity extends AppCompatActivity implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == GALLERY_INTENT && resultCode == Activity.RESULT_OK) {
-            Picasso.with(this)
-                    .load(data.getData())
-                    .noPlaceholder()
-                    .fit()
-                    .into(ivGroupAvatar);
             picData = data.getData();
+            setGroupAvatar(picData);
         }
     }
 
