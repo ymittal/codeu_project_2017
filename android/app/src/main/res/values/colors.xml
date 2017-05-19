@@ -5,11 +5,12 @@
     <color name="colorAccent">#FF4081</color>
     <color name="ChatMe_Blue">#14333d</color>
     <color name="ChatMe_Red">#6c2324</color>
-    <color name="divider">#20e0e0e0</color>
+    <color name="divider">#40e0e0e0</color>
 
     <color name="messages">#cc111111</color>
     <color name="ic_send_disabled">#809e9e9e</color>
     <color name="ic_send_enabled">#b09e9e9e</color>
     <color name="msgIncoming">#70bcaaa4</color>
     <color name="msgOutgoing">#709e9e9e</color>
+    <color name="user_list_item_selected">#60bcaaa4</color>
 </resources>

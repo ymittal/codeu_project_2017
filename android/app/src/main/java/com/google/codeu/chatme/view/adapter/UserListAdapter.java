@@ -2,9 +2,13 @@ package com.google.codeu.chatme.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
+import android.util.StateSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -127,10 +131,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
                 if (conv.getParticipants().size() >= Conversation.MIN_CONV_PARTICIPANTS) {
                     createConvPresenter.addConversation(conv);
                 } else {
-                    Toast.makeText(context, context.getString(R.string.min_conv_participants), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getString(R.string.min_conv_participants),
+                            Toast.LENGTH_SHORT).show();
                 }
 
-                mMultiSelector.clearSelections();
                 return true;
             }
             return false;
@@ -150,6 +154,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView, mMultiSelector);
+            setSelectionModeBackgroundDrawable(getSelectedBackground());
+            setSelectionModeStateListAnimator(null);
 
             itemView.setLongClickable(true);
             itemView.setOnLongClickListener(this);
@@ -157,6 +163,15 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
+        }
+
+        private StateListDrawable getSelectedBackground() {
+            ColorDrawable cd = new ColorDrawable(ContextCompat.getColor(context,
+                    R.color.user_list_item_selected));
+            StateListDrawable sld = new StateListDrawable();
+            sld.addState(new int[]{android.R.attr.state_activated}, cd);
+            sld.addState(StateSet.WILD_CARD, null);
+            return sld;
         }
 
         private void setUserId(String uid) {
