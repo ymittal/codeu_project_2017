@@ -115,15 +115,17 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
             if (menuItem.getItemId() == R.id.menu_item_create_group) {
                 mode.finish();
-                Conversation conversation = new Conversation(FirebaseUtil.getCurrentUserUid());
-                conversation.setIsGroup(true);
 
-                for (int i = users.size(); i >= 0; i--) {
+                Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
+                conv.setIsGroup(true);
+                for (int i = users.size() - 1; i >= 0; i--) {
                     if (mMultiSelector.isSelected(i, 0)) {
-                        conversation.addParticipant(users.get(i).getId());
+                        conv.addParticipant(users.get(i).getId());
                     }
                 }
-                createConvPresenter.addConversation(conversation);
+                createConvPresenter.addConversation(conv);
+
+                mMultiSelector.clearSelections();
                 return true;
             }
             return false;
@@ -174,15 +176,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-            // when no items have been long tapped on
             if (!mMultiSelector.tapSelection(this)) {
                 // creates a new conversation object and add recipient as a participant
                 Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
                 conv.addParticipant(userId);
                 conv.setIsGroup(false);
 
-                // checks for conversation duplicates and then attempts to add a conversation object
-                // or launch Message Activity straight away
+                // checks for conversation duplicates and adds a conversation only if unique
                 createConvPresenter.openConversationMessages(conv);
             }
         }
