@@ -19,7 +19,7 @@ public class SplashScreen extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        final TextView txtView = (TextView) findViewById(R.id.textView);
+        TextView txtView = (TextView) findViewById(R.id.textView);
         txtView.startAnimation(AnimationUtils.loadAnimation(SplashScreen.this, android.R.anim.slide_in_left));
 
         Handler handler = new Handler();

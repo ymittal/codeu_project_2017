@@ -5,10 +5,6 @@ import com.google.codeu.chatme.model.User;
 
 import java.util.List;
 
-/**
- * An interface to handle presenter-delegated actions in order to
- * update list of users in {@link UserListAdapter}
- */
 public interface UserListAdapterView {
 
     /**

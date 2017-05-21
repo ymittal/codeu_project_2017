@@ -2,9 +2,9 @@
     <string name="app_name">ChatMe</string>
 
     <!-- Strings related to login & profile changes  -->
-    <string name="progress_sign_in">Fetching your data...</string>
-    <string name="progress_sign_up">Creating your recipe...</string>
-    <string name="saving_changes">Saving your changes...</string>
+    <string name="progress_sign_in">Fetching your data&#8230;</string>
+    <string name="progress_sign_up">Creating your recipe&#8230;</string>
+    <string name="saving_changes">Saving your changes&#8230;</string>
 
     <string name="title_activity_create_conversation">New Chat</string>
     <string name="title_activity_add_users">AddUsersActivity</string>
@@ -21,7 +21,7 @@
     <string name="err_et_password">Enter password</string>
     <string name="toast_update_name">Name has been updated</string>
     <string name="toast_pwd_name">Password has been updated</string>
-    <string name="progress_upload_pic">Uploading picture...</string>
+    <string name="progress_upload_pic">Uploading picture&#8230;</string>
     <string name="progress_update_name">Updating full name</string>
     <string name="progress_update_pwd">Updating password</string>
     <string name="btn_add_group_participants">Add Group Participants</string>
@@ -43,6 +43,7 @@
     <string name="last_seen_ago">last seen %1$s ago</string>
     <string name="last_seen_on">last seen on %1$s</string>
     <string name="sign_out_failure">Sign out failed! Try again later.</string>
+    <string name="active_status_online">Online</string>
 
     <plurals name="number_mins">
         <item quantity="one">a min</item>
