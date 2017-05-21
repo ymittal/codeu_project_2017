@@ -118,12 +118,15 @@ public class CreateGroupActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void openMessageActivity() {
-        Intent mIntent = new Intent(this, MessagesActivity.class);
+    public void openMessageActivity(String conversationId) {
         Bundle bundle = new Bundle();
+        conversation.setId(conversationId);
         bundle.putSerializable(ConversationListAdapter.CONV_MESSAGES_EXTRA, conversation);
+
+        Intent mIntent = new Intent(this, MessagesActivity.class);
         mIntent.putExtras(bundle);
         startActivity(mIntent);
+        finish();
     }
 
     public void showProgressDialog(int messsage) {
