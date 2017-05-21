@@ -10,10 +10,10 @@ public class BaseFragment extends Fragment implements BaseFragmentView {
     private ProgressDialog mProgressDialog;
 
     @Override
-    public void showProgressDialog(int messsage) {
+    public void showProgressDialog(int message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getContext());
-            mProgressDialog.setMessage(getString(messsage));
+            mProgressDialog.setMessage(getString(message));
             mProgressDialog.setIndeterminate(true);
         }
 

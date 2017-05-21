@@ -37,6 +37,7 @@ public class UserPresenter implements UserInteractor {
         mRootRef = FirebaseDatabase.getInstance().getReference();
     }
 
+    @Override
     public void loadUsers() {
         mRootRef.child("users").orderByChild("fullName").addValueEventListener(new ValueEventListener() {
 

@@ -75,6 +75,10 @@ public final class User {
         return lastSeen;
     }
 
+    public void setLastSeen(long lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
     public void setIsOnline(boolean online) {
         isOnline = online;
     }

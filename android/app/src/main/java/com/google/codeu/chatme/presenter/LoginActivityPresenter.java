@@ -8,7 +8,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.User;
 import com.google.codeu.chatme.utility.FirebaseUtil;
-import com.google.codeu.chatme.view.login.LoginActivity;
 import com.google.codeu.chatme.view.login.LoginView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,19 +32,9 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
     private final LoginView view;
 
     private DatabaseReference mRootRef;
-
     private FirebaseAuth mAuth;
-
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    /**
-     * Sets up the presenter with a reference to the {@link LoginActivity}.
-     * Additionally, adds {@link com.google.firebase.auth.FirebaseAuth.AuthStateListener}
-     * to {@link FirebaseAuth} instance to detect changed in user authentication status
-     * Refer to {@link LoginActivityPresenter#postConstruct()}
-     *
-     * @param view a reference to {@link LoginActivity}
-     */
     public LoginActivityPresenter(final LoginView view) {
         this.view = view;
     }
@@ -143,8 +132,8 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
     /**
      * Saves a new user to Firebase real-time database
      *
-     * @param id      id of {@link User}
-     * @param newUser {@link User} object to be saved to database
+     * @param id      user id
+     * @param newUser User object to be saved to database
      */
     private void addUser(final String id, User newUser) {
 
@@ -161,6 +150,7 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
         });
     }
 
+    @Override
     public void signIn(String email, String password) {
         boolean isValid = validateInput(email, password);
         if (!isValid) {
@@ -180,7 +170,7 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             view.makeToast(task.getException().getMessage());
                         } else {
-                            Log.i(TAG, "signInwithEmail:success:"
+                            Log.i(TAG, "signInWithEmail:success:"
                                     + mAuth.getCurrentUser().getUid());
                         }
                     }
@@ -191,7 +181,7 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
      * Validates user email and password for login form
      *
      * @param email    email the user entered
-     * @param password password the user enterd
+     * @param password password the user entered
      * @return true if the inputs are valid
      */
     public boolean validateInput(String email, String password) {

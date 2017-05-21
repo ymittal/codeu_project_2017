@@ -6,9 +6,9 @@ public interface BaseActivityView {
     /**
      * Shows progress loader
      *
-     * @param messsage resource Id of string message to display
+     * @param message resource Id of string message to display
      */
-    void showProgressDialog(int messsage);
+    void showProgressDialog(int message);
 
     /**
      * Hides progress loader

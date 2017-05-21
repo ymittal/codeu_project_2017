@@ -8,31 +8,31 @@ import com.google.firebase.auth.FirebaseAuth;
  * This interface provides functions which primarily relate to login
  * and sign up functionality of this Firebase-powered chat application
  */
-public interface ProfileInteractor {
+interface ProfileInteractor {
 
     /**
-     * Attempts to update an account with given account credentials
+     * Updates current user's profile based on provided parameters
      *
-     * @param fullName user Full Name
-     * @param username user username
-     * @param password user password
+     * @param fullName user's full name
+     * @param username user's username
+     * @param password user's password
      */
-    public void updateUser(String fullName, String username, String password);
+    void updateUser(String fullName, String username, String password);
 
     /**
-     * Logs out current user
+     * Logs current user out
      */
-    public void signOut();
+    void signOut();
 
     /**
-     * Delete current user's account
+     * Delete current user's account from firebase auth and database
      */
-    public void deleteAccount();
+    void deleteAccount();
 
     /**
-     * Gets current users profile
+     * Get current user's profile information and store in User object
      */
-    public void getUserProfile();
+    void getUserProfile();
 
     /**
      * Uploads profile picture to Firebase Storage and then updates Database
@@ -43,14 +43,12 @@ public interface ProfileInteractor {
     void uploadProfilePictureToStorage(Uri data);
 
     /**
-     * Adds {@link com.google.firebase.auth.FirebaseAuth.AuthStateListener} to
-     * {@link FirebaseAuth} which is the entry point to Firebase SDK
+     * Adds Auth Listener to {@link FirebaseAuth}
      */
-    public void setAuthStateListener();
+    void setAuthStateListener();
 
     /**
-     * Removes {@link com.google.firebase.auth.FirebaseAuth.AuthStateListener} from
-     * {@link FirebaseAuth} if it exists
+     * Removes Auth Listener from {@link FirebaseAuth}
      */
-    public void removeAuthStateListener();
+    void removeAuthStateListener();
 }

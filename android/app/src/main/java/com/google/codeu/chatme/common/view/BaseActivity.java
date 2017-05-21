@@ -15,10 +15,10 @@ public class BaseActivity extends AppCompatActivity implements BaseActivityView 
     }
 
     @Override
-    public void showProgressDialog(int messsage) {
+    public void showProgressDialog(int message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(messsage));
+            mProgressDialog.setMessage(getString(message));
             mProgressDialog.setIndeterminate(true);
         }
 

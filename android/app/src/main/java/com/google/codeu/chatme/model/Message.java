@@ -11,11 +11,11 @@ import java.io.Serializable;
 @IgnoreExtraProperties
 public final class Message implements Serializable {
 
-    public String id;
-    public String author;
-    public String conversation;
-    public String content;
-    public long timeCreated;
+    private String id;
+    private String author;
+    private String conversation;
+    private String content;
+    private long timeCreated;
 
     public Message() {
     }
