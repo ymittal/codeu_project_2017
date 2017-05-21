@@ -7,7 +7,9 @@ public interface CreateGroupView extends BaseActivityView {
 
     /**
      * Launches MessageActivity for the specific group conversation
+     *
+     * @param conversationId conversation id
      */
-    void openMessageActivity();
+    void openMessageActivity(String conversationId);
 
 }

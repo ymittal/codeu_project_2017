@@ -53,7 +53,7 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
                         String downloadUrl = taskSnapshot.getDownloadUrl().toString();
                         Log.i(TAG, "uploadGroupPicture:success:downloadUrl " + downloadUrl);
                         updateGroupPhotoUrl(downloadUrl, conversationId);
-                        view.openMessageActivity();
+                        view.openMessageActivity(conversationId);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -65,7 +65,7 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
     }
 
     @Override
-    public void addGroupConversation(Conversation conversation, final Uri picData) {
+    public void addGroupConversation(final Conversation conversation, final Uri picData) {
         if (conversation.getGroupName().isEmpty()) {
             return;
         }
@@ -82,7 +82,7 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
                             if (picData != null) {
                                 uploadGroupPictureToStorage(picData, conversationId);
                             } else {
-                                view.openMessageActivity();
+                                view.openMessageActivity(conversationId);
                             }
                         }
                     }
