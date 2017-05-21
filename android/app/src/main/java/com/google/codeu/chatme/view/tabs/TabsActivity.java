@@ -6,12 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.inputmethod.InputMethodManager;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.codeu.chatme.R;
+import com.google.codeu.chatme.common.view.BaseActivity;
 
 /**
  * This activity controls the tab panel for switching between the following three fragments
@@ -19,7 +19,7 @@ import com.google.codeu.chatme.R;
  * - {@link ProfileFragment}
  * - {@link UsersFragment}
  */
-public class TabsActivity extends AppCompatActivity
+public class TabsActivity extends BaseActivity
         implements ConversationsFragment.OnFragmentInteractionListener,
         UsersFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener {
@@ -39,7 +39,7 @@ public class TabsActivity extends AppCompatActivity
         tabsStrip.setViewPager(mPager);
     }
 
-    public void initViewPager(ViewPager mPager) {
+    private void initViewPager(ViewPager mPager) {
         mPager.setAdapter(new MyViewPagerAdaper(getSupportFragmentManager()));
         mPager.setOffscreenPageLimit(MyViewPagerAdaper.NUM_TABS);
 
@@ -61,14 +61,17 @@ public class TabsActivity extends AppCompatActivity
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
     }
 
-    public class MyViewPagerAdaper extends FragmentPagerAdapter {
+    /**
+     * A custom adapter class for view pager displayed on TabsActivity
+     */
+    private class MyViewPagerAdaper extends FragmentPagerAdapter {
 
         private static final int NUM_TABS = 3;
 
-        public MyViewPagerAdaper(FragmentManager supportFragmentManager) {
+        MyViewPagerAdaper(FragmentManager supportFragmentManager) {
             super(supportFragmentManager);
         }
 

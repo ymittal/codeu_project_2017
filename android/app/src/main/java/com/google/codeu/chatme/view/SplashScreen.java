@@ -1,16 +1,18 @@
 package com.google.codeu.chatme.view;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.google.codeu.chatme.R;
+import com.google.codeu.chatme.common.view.BaseActivity;
 import com.google.codeu.chatme.view.login.LoginActivity;
 
-public class SplashScreen extends AppCompatActivity {
+public class SplashScreen extends BaseActivity {
+
+    public static final int SPLASH_LENGTH_IN_MILLISECONDS = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +21,6 @@ public class SplashScreen extends AppCompatActivity {
 
         final TextView txtView = (TextView) findViewById(R.id.textView);
         txtView.startAnimation(AnimationUtils.loadAnimation(SplashScreen.this, android.R.anim.slide_in_left));
-        int SPLASH_LENGTH_IN_MILLISECONDS = 1500;
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

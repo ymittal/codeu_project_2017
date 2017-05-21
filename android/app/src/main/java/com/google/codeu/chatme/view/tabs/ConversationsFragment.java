@@ -3,7 +3,6 @@ package com.google.codeu.chatme.view.tabs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,16 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.google.codeu.chatme.view.create.CreateConversationActivity;
 import com.google.codeu.chatme.R;
+import com.google.codeu.chatme.common.view.BaseFragment;
 import com.google.codeu.chatme.view.adapter.ConversationListAdapter;
+import com.google.codeu.chatme.view.create.CreateConversationActivity;
 
-public class ConversationsFragment extends Fragment implements ConversationsView, View.OnClickListener {
-
-    private OnFragmentInteractionListener mListener;
-    private ImageButton btnCreateConversation;
-    private RecyclerView rvChatList;
-    private ConversationListAdapter conversationListAdapter;
+public class ConversationsFragment extends BaseFragment implements ConversationsView, View.OnClickListener {
 
     /**
      * Required empty public constructor
@@ -53,28 +48,27 @@ public class ConversationsFragment extends Fragment implements ConversationsView
     }
 
     /**
-     * Sets up user interface by loading the list of conversations for the current
-     * user in the recyclerview
+     * Loads the list of conversations for the current user in the recyclerview
      *
-     * @param view inflated {@link ConversationsFragment} layout view
+     * @param view
      */
     private void initializeUI(View view) {
-        rvChatList = (RecyclerView) view.findViewById(R.id.rvChatList);
+        ImageButton btnCreateConv = (ImageButton) view.findViewById(R.id.btnCreateConversation);
+        btnCreateConv.setOnClickListener(this);
+
+        RecyclerView rvChatList = (RecyclerView) view.findViewById(R.id.rvChatList);
         rvChatList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        btnCreateConversation = (ImageButton) view.findViewById(R.id.btnCreateConversation);
-        btnCreateConversation.setOnClickListener(this);
-        conversationListAdapter = new ConversationListAdapter(getContext());
-        rvChatList.setAdapter(conversationListAdapter);
+        ConversationListAdapter convListAdapter = new ConversationListAdapter(getContext());
+        rvChatList.setAdapter(convListAdapter);
 
-        conversationListAdapter.loadConversations();
+        convListAdapter.loadConversations();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -84,7 +78,6 @@ public class ConversationsFragment extends Fragment implements ConversationsView
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -98,9 +91,7 @@ public class ConversationsFragment extends Fragment implements ConversationsView
         }
     }
 
-    /**
-     * Launches {@link CreateConversationActivity}
-     */
+    @Override
     public void openCreateConversationActivity() {
         Intent mIntent = new Intent(getActivity(), CreateConversationActivity.class);
         getActivity().startActivity(mIntent);

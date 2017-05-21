@@ -1,15 +1,14 @@
 package com.google.codeu.chatme.view.tabs;
 
-import com.google.codeu.chatme.view.create.*;
-/**
- * Following MVP design pattern, this interface provides functions
- * which are implemented in {@link ConversationsFragment}
- */
 
-public interface ConversationsView {
+import com.google.codeu.chatme.common.view.BaseFragmentView;
+import com.google.codeu.chatme.view.create.CreateConversationActivity;
+
+public interface ConversationsView extends BaseFragmentView {
 
     /**
      * Launches {@link CreateConversationActivity}
      */
     void openCreateConversationActivity();
+
 }

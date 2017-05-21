@@ -1,17 +1,16 @@
 package com.google.codeu.chatme.view.create;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.codeu.chatme.R;
+import com.google.codeu.chatme.common.view.BaseActivity;
 import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.presenter.CreateGroupPresenter;
 import com.google.codeu.chatme.view.adapter.ConversationListAdapter;
@@ -20,14 +19,12 @@ import com.google.codeu.chatme.view.message.MessagesActivity;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
-public class CreateGroupActivity extends AppCompatActivity implements
+public class CreateGroupActivity extends BaseActivity implements
         CreateGroupView, View.OnClickListener {
 
     private static final int GALLERY_INTENT = 73;
 
     private CreateGroupPresenter presenter;
-
-    private ProgressDialog mProgressDialog;
 
     private Button btnStartGroup;
     private EditText etGroupName;
@@ -41,10 +38,7 @@ public class CreateGroupActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        // retrieves the conversation sent from UsersFragment
+        // retrieves the to-be created conversation object
         Bundle extras = getIntent().getExtras();
         conversation = (Conversation) extras.getSerializable(UserListAdapter.GROUP_CONV_EXTRA);
 
@@ -58,6 +52,9 @@ public class CreateGroupActivity extends AppCompatActivity implements
      * Initializes view elements
      */
     private void setupUI() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         btnStartGroup = (Button) findViewById(R.id.btnStartGroup);
         etGroupName = (EditText) findViewById(R.id.etGroupName);
         ivGroupAvatar = (CircularImageView) findViewById(R.id.ivGroupAvatar);
@@ -69,7 +66,7 @@ public class CreateGroupActivity extends AppCompatActivity implements
     }
 
     /**
-     * Sets group avatar on the UI. If null, set the placeholder group avatar
+     * Sets group avatar on the UI. If null, places the placeholder group avatar instead
      *
      * @param picData Uri containing group avatar data
      */
@@ -93,12 +90,13 @@ public class CreateGroupActivity extends AppCompatActivity implements
     public void onClick(View view) {
         switch (view.getId()) {
 
+            // start group button clicked
             case R.id.btnStartGroup:
                 conversation.setGroupName(etGroupName.getText().toString());
                 presenter.addGroupConversation(conversation, picData);
                 break;
 
-            // opens gallery to pick a new profile picture
+            // opens gallery to pick a new group avatar
             case R.id.ivGroupAvatar:
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
@@ -124,21 +122,5 @@ public class CreateGroupActivity extends AppCompatActivity implements
         bundle.putSerializable(ConversationListAdapter.CONV_MESSAGES_EXTRA, conversation);
         mIntent.putExtras(bundle);
         startActivity(mIntent);
-    }
-
-    public void showProgressDialog(int messsage) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(messsage));
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    public void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
     }
 }
