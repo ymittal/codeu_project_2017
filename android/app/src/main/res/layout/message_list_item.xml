@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="296dp"
-                android:text="Sender"
+                android:text="@string/tv_sender_dummy"
                 android:textColor="@color/messages"
                 android:textSize="12sp"
                 android:visibility="gone" />
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="296dp"
-                android:text="Hello, how are you?"
+                android:text="@string/tv_message_dummy"
                 android:textColor="@color/messages"
                 android:textSize="16sp" />
 
