@@ -40,8 +40,8 @@ public class TabsActivity extends BaseActivity
     }
 
     private void initViewPager(ViewPager mPager) {
-        mPager.setAdapter(new MyViewPagerAdaper(getSupportFragmentManager()));
-        mPager.setOffscreenPageLimit(MyViewPagerAdaper.NUM_TABS);
+        mPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager()));
+        mPager.setOffscreenPageLimit(MyViewPagerAdapter.NUM_TABS);
 
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -61,17 +61,19 @@ public class TabsActivity extends BaseActivity
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+        if (this.getCurrentFocus() != null) {
+            imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     /**
      * A custom adapter class for view pager displayed on TabsActivity
      */
-    private class MyViewPagerAdaper extends FragmentPagerAdapter {
+    private class MyViewPagerAdapter extends FragmentPagerAdapter {
 
         private static final int NUM_TABS = 3;
 
-        MyViewPagerAdaper(FragmentManager supportFragmentManager) {
+        MyViewPagerAdapter(FragmentManager supportFragmentManager) {
             super(supportFragmentManager);
         }
 

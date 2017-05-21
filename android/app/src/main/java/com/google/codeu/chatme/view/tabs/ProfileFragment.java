@@ -39,17 +39,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView, View.O
     public ProfileFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ProfileFragment.
-     */
-    public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,11 +81,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView, View.O
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override

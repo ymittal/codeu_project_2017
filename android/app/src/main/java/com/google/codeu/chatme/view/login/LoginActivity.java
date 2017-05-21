@@ -16,20 +16,18 @@ import com.google.codeu.chatme.view.tabs.TabsActivity;
  */
 public class LoginActivity extends BaseActivity implements LoginView, View.OnClickListener {
 
-    private static final String TAG = LoginActivity.class.getName();
-
     private LoginActivityPresenter presenter;
 
     private Button btnLogin;
     private EditText etPassword;
     private EditText etEmail;
-    private Button btnCreateAcnt;
+    private Button btnCreateAccount;
 
     /**
      * Sets up Firebase Auth to respond to a change in user's sign-in state, initializes view
      * elements
      *
-     * @param savedInstanceState
+     * @param savedInstanceState saved state bundle
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +40,9 @@ public class LoginActivity extends BaseActivity implements LoginView, View.OnCli
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnCreateAcnt = (Button) findViewById(R.id.btnCreateAcnt);
+        btnCreateAccount = (Button) findViewById(R.id.btnCreateAccount);
         btnLogin.setOnClickListener(this);
-        btnCreateAcnt.setOnClickListener(this);
+        btnCreateAccount.setOnClickListener(this);
     }
 
     @Override
@@ -89,7 +87,7 @@ public class LoginActivity extends BaseActivity implements LoginView, View.OnCli
                 break;
 
             // create account button clicked
-            case R.id.btnCreateAcnt:
+            case R.id.btnCreateAccount:
                 presenter.signUp(email, password);
                 break;
         }

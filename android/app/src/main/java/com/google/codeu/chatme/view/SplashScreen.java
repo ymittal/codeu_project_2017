@@ -12,7 +12,7 @@ import com.google.codeu.chatme.view.login.LoginActivity;
 
 public class SplashScreen extends BaseActivity {
 
-    public static final int SPLASH_LENGTH_IN_MILLISECONDS = 1000;
+    private static final int SPLASH_LENGTH_IN_MILLISECONDS = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

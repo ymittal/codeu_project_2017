@@ -23,22 +23,6 @@ public class ConversationsFragment extends BaseFragment implements Conversations
     public ConversationsFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ConversationsFragment.
-     */
-    public static ConversationsFragment newInstance() {
-        ConversationsFragment fragment = new ConversationsFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,7 +34,7 @@ public class ConversationsFragment extends BaseFragment implements Conversations
     /**
      * Loads the list of conversations for the current user in the recyclerview
      *
-     * @param view
+     * @param view inflated layout view
      */
     private void initializeUI(View view) {
         ImageButton btnCreateConv = (ImageButton) view.findViewById(R.id.btnCreateConversation);
@@ -73,11 +57,6 @@ public class ConversationsFragment extends BaseFragment implements Conversations
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override

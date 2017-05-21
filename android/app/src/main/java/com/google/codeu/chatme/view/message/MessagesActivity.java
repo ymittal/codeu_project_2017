@@ -82,7 +82,7 @@ public class MessagesActivity extends BaseActivity implements View.OnClickListen
      *
      * @return message message to add to database
      */
-    public Message createMessageObject() {
+    private Message createMessageObject() {
         String author = FirebaseUtil.getCurrentUserUid();
         String conversationId = conversation.getId();
         String content = etTypeMessage.getText().toString().trim();
