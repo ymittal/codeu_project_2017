@@ -3,6 +3,8 @@ package com.google.codeu.chatme.presenter;
 import android.util.Log;
 
 import com.google.codeu.chatme.model.Message;
+import com.google.codeu.chatme.model.PublicUserDetails;
+import com.google.codeu.chatme.utility.network.RetrofitBuilder;
 import com.google.codeu.chatme.view.adapter.MessagesAdapterView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -12,6 +14,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Following MVP design pattern, this class encapsulates the functionality to
@@ -23,7 +32,7 @@ public class MessagesPresenter implements MessagesInteractor {
 
     private static final String TAG = MessagesPresenter.class.getName();
 
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mRootRef;
 
     private final MessagesAdapterView view;
 
@@ -31,6 +40,12 @@ public class MessagesPresenter implements MessagesInteractor {
         this.view = view;
     }
 
+    @javax.annotation.PostConstruct
+    public void postConstruct() {
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Override
     public void loadMessages(String conversationId) {
         Query conversationsQuery = mRootRef.child("messages")
                 .orderByChild("conversation").equalTo(conversationId);
@@ -57,6 +72,7 @@ public class MessagesPresenter implements MessagesInteractor {
         });
     }
 
+    @Override
     public void sendMessage(Message newMessage) {
         final String newMessageId = mRootRef.child("messages").push().getKey();
 
@@ -69,6 +85,28 @@ public class MessagesPresenter implements MessagesInteractor {
                         } else {
                             Log.i(TAG, "addMessage:success " + newMessageId);
                         }
+                    }
+                });
+    }
+
+    @Override
+    public void getParticipantDetails(List<String> participants) {
+        RetrofitBuilder.getService().getDetailsFromIds(participants)
+                .enqueue(new Callback<HashMap<String, PublicUserDetails>>() {
+                    @Override
+                    public void onResponse(Call<HashMap<String, PublicUserDetails>> call,
+                                           Response<HashMap<String, PublicUserDetails>> response) {
+                        Log.i(TAG, "getParticipantDetails:retrieved "
+                                + String.valueOf(response.body().size()));
+
+                        Log.d("LOG_TAG", String.valueOf(Arrays.asList(response.body())));
+                        view.setParticipantDetailsMap(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<HashMap<String, PublicUserDetails>> call,
+                                          Throwable t) {
+                        Log.e(TAG, "getParticipantDetails:failure " + t.getMessage());
                     }
                 });
     }

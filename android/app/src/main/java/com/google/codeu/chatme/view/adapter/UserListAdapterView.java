@@ -1,9 +1,7 @@
 package com.google.codeu.chatme.view.adapter;
 
-import android.content.Context;
-
+import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.User;
-import com.google.codeu.chatme.view.message.MessagesActivity;
 
 import java.util.List;
 
@@ -12,17 +10,25 @@ import java.util.List;
  * update list of users in {@link UserListAdapter}
  */
 public interface UserListAdapterView {
+
     /**
      * Resets the list of users in {@link UserListAdapter}
      *
      * @param users new list of users
      */
-    public void setUserList(List<User> users);
+    void setUserList(List<User> users);
 
     /**
-     * Launches {@link MessagesActivity} for the specific conversation
+     * Launches MessagesActivity for the specific conversation
      *
-     * @param conversationId id of conversation to display messages of
+     * @param conversation conversation to display messages of
      */
-    void openMessageActivity(String conversationId);
+    void openMessageActivity(Conversation conversation);
+
+    /**
+     * Launches CreateGroupActivity for conversation passed as param
+     *
+     * @param conversation conversation object
+     */
+    void openCreateGroupActivity(Conversation conversation);
 }

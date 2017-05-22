@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.codeu.chatme.R;
+import com.google.codeu.chatme.common.SimpleDividerItemDecoration;
 import com.google.codeu.chatme.view.adapter.UserListAdapter;
 
 public class UsersFragment extends Fragment {
@@ -59,6 +60,7 @@ public class UsersFragment extends Fragment {
         rvUserList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         userListAdapter = new UserListAdapter(getContext());
+        rvUserList.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         rvUserList.setAdapter(userListAdapter);
 
         userListAdapter.loadUsers();

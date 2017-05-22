@@ -3,23 +3,24 @@ package com.google.codeu.chatme.model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 @IgnoreExtraProperties
-public final class Conversation {
+public final class Conversation implements Serializable {
 
-    public String id;
-    public String owner;
-    public long timeCreated;
-    public Message lastMessage;
+    public static final int MIN_CONV_PARTICIPANTS = 2;
 
-    /**
-     * List of participants of a conversation (participants may be added or
-     * removed in case "groups" are implemented)
-     */
+    private String id;
+    private String owner;
+    private long timeCreated;
+    private Message lastMessage;
+    private boolean isGroup;
     private final List<String> participants = new ArrayList<>();
+    private String photoUrl;
+    private String groupName;
 
     public Conversation() {
     }
@@ -44,6 +45,22 @@ public final class Conversation {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public void setIsGroup(boolean isGroup) {
+        this.isGroup = isGroup;
+    }
+
+    public boolean getIsGroup() {
+        return this.isGroup;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public long getTimeCreated() {
@@ -81,6 +98,14 @@ public final class Conversation {
 
     public void addParticipant(String participantId) {
         participants.add(participantId);
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     /**

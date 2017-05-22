@@ -2,18 +2,32 @@ package com.google.codeu.chatme.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
+import android.util.StateSet;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
+import com.bignerdranch.android.multiselector.MultiSelector;
+import com.bignerdranch.android.multiselector.SwappingHolder;
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.User;
 import com.google.codeu.chatme.presenter.CreateConversationPresenter;
 import com.google.codeu.chatme.presenter.UserPresenter;
 import com.google.codeu.chatme.utility.FirebaseUtil;
+import com.google.codeu.chatme.view.create.CreateGroupActivity;
 import com.google.codeu.chatme.view.message.MessagesActivity;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -22,25 +36,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A {@link android.support.v7.widget.RecyclerView.Adapter} to bind the list of users
- * to the recyclerview in {@link com.google.codeu.chatme.view.tabs.UsersFragment}
+ * A RecyclerView Adapter to bind the list of users displayed in UsersFragment
  */
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder>
         implements UserListAdapterView {
 
-    public static final String CONV_ID_EXTRA = "CONV_ID_EXTRA";
+    public static final String GROUP_CONV_EXTRA = "create group conversation extra";
 
     private List<User> users = new ArrayList<>();
 
-    private final Context context;
+    /**
+     * Multi-selector to select multiple user list items
+     */
+    private MultiSelector mMultiSelector = new MultiSelector();
 
     private CreateConversationPresenter createConvPresenter;
     private UserPresenter userPresenter;
 
+    private final Context context;
+
     public UserListAdapter(Context context) {
-        this.userPresenter = new UserPresenter(this);
-        this.userPresenter.postConstruct();
-        this.createConvPresenter = new CreateConversationPresenter(this);
+        userPresenter = new UserPresenter(this);
+        userPresenter.postConstruct();
+        createConvPresenter = new CreateConversationPresenter(this);
+        createConvPresenter.postConstruct();
+
         this.context = context;
     }
 
@@ -85,9 +105,20 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     @Override
-    public void openMessageActivity(String conversationId) {
+    public void openMessageActivity(Conversation conversation) {
         Intent mIntent = new Intent(context, MessagesActivity.class);
-        mIntent.putExtra(CONV_ID_EXTRA, conversationId);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ConversationListAdapter.CONV_MESSAGES_EXTRA, conversation);
+        mIntent.putExtras(bundle);
+        context.startActivity(mIntent);
+    }
+
+    @Override
+    public void openCreateGroupActivity(Conversation conversation) {
+        Intent mIntent = new Intent(context, CreateGroupActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(GROUP_CONV_EXTRA, conversation);
+        mIntent.putExtras(bundle);
         context.startActivity(mIntent);
     }
 
@@ -95,7 +126,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
      * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
      * various views of a user list item
      */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends SwappingHolder implements View.OnClickListener,
+            View.OnLongClickListener {
 
         private TextView tvName;
         private TextView tvLastSeen;
@@ -104,7 +136,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         private String userId;
 
         public ViewHolder(View itemView) {
-            super(itemView);
+            super(itemView, mMultiSelector);
+            setSelectionModeBackgroundDrawable(getSelectedBackground());
+            setSelectionModeStateListAnimator(null);
+
+            itemView.setLongClickable(true);
+            itemView.setOnLongClickListener(this);
+            itemView.setOnClickListener(this);
 
             itemView.setOnClickListener(this);
 
@@ -113,8 +151,17 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             civUserPic = (CircularImageView) itemView.findViewById(R.id.civUserPic);
         }
 
+        private StateListDrawable getSelectedBackground() {
+            ColorDrawable cd = new ColorDrawable(ContextCompat.getColor(context,
+                    R.color.user_list_item_selected));
+            StateListDrawable sld = new StateListDrawable();
+            sld.addState(new int[]{android.R.attr.state_activated}, cd);
+            sld.addState(StateSet.WILD_CARD, null);
+            return sld;
+        }
+
         private void setUserId(String uid) {
-            userId = uid;
+            this.userId = uid;
         }
 
         private void setHolderPicture(String picUrl) {
@@ -135,12 +182,72 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-            // creates a new conversation object and add recipient as a participant
-            Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
-            conv.addParticipant(userId);
+            if (!mMultiSelector.tapSelection(this)) {
+                // creates a new conversation object and add recipient as a participant
+                Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
+                conv.addParticipant(userId);
+                conv.setIsGroup(false);
 
-            // checks for conversation duplicates and adds a conversation only if unique
-            createConvPresenter.openConversationMessages(conv);
+                // checks for conversation duplicates and adds a conversation only if unique
+                createConvPresenter.openConversationMessages(conv);
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (!mMultiSelector.isSelectable()) {
+                ((AppCompatActivity) context).startSupportActionMode(selectorCallback);
+                mMultiSelector.setSelectable(true);
+                mMultiSelector.setSelected(ViewHolder.this, true);
+                return true;
+            }
+            return false;
         }
     }
+
+    /**
+     * Callback to handle clicks on contextual action bar which pops up when a user list item
+     * is long tapped on
+     */
+    private ModalMultiSelectorCallback selectorCallback = new ModalMultiSelectorCallback(mMultiSelector) {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            super.onCreateActionMode(mode, menu);
+            mode.getMenuInflater().inflate(R.menu.user_list_item_context, menu);
+            return true;
+        }
+
+        /**
+         * Launches CreateGroupActivity if create group item was clicked and at least
+         * one user was selected
+         *
+         * @param mode
+         * @param menuItem menu item clicked
+         * @return true if click is handled properly
+         */
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
+            if (menuItem.getItemId() == R.id.menu_item_create_group) {
+                mode.finish();
+
+                Conversation conv = new Conversation(FirebaseUtil.getCurrentUserUid());
+                conv.setIsGroup(true);
+                for (int i = users.size() - 1; i >= 0; i--) {
+                    if (mMultiSelector.isSelected(i, 0)) {
+                        conv.addParticipant(users.get(i).getId());
+                    }
+                }
+                if (conv.getParticipants().size() >= Conversation.MIN_CONV_PARTICIPANTS) {
+                    openCreateGroupActivity(conv);
+                } else {
+                    Toast.makeText(context, context.getString(R.string.min_conv_participants),
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+            }
+            return false;
+        }
+    };
 }

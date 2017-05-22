@@ -15,25 +15,22 @@ import java.util.HashSet;
 public class CreateConversationPresenter implements CreateConversationInteractor {
 
     private static final String TAG = CreateConversationPresenter.class.getName();
-    /**
-     * {@link UserListAdapter} reference to update list of conversations
-     */
+
     private final UserListAdapter view;
 
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mRootRef;
 
-    /**
-     * Constructor to accept a reference to a recycler view adapter to bind
-     * conversation data to views
-     *
-     * @param view {@link UserListAdapter} reference
-     */
     public CreateConversationPresenter(UserListAdapter view) {
         this.view = view;
     }
 
+    @javax.annotation.PostConstruct
+    public void postConstruct() {
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+    }
+
     @Override
-    public void addConversation(Conversation conversation) {
+    public void addConversation(final Conversation conversation) {
         final String conversationId = mRootRef.child("conversations").push().getKey();
         mRootRef.child("conversations").child(conversationId).setValue(conversation,
                 new DatabaseReference.CompletionListener() {
@@ -43,7 +40,8 @@ public class CreateConversationPresenter implements CreateConversationInteractor
                             Log.w(TAG, "addConversation:failure " + databaseError.getMessage());
                         } else {
                             Log.i(TAG, "addConversation:success " + conversationId);
-                            view.openMessageActivity(conversationId);
+                            conversation.setId(conversationId);
+                            view.openMessageActivity(conversation);
                         }
                     }
                 });
@@ -63,7 +61,7 @@ public class CreateConversationPresenter implements CreateConversationInteractor
                     HashSet participants = new HashSet(conv.getParticipants());
                     if (participantsSet.equals(participants)) {
                         conv.setId(data.getKey());
-                        view.openMessageActivity(conv.getId());
+                        view.openMessageActivity(conv);
                         return;
                     }
                 }
@@ -77,6 +75,5 @@ public class CreateConversationPresenter implements CreateConversationInteractor
                 Log.e(TAG, "openConversationMessages:failure " + databaseError.getMessage());
             }
         });
-
     }
 }
