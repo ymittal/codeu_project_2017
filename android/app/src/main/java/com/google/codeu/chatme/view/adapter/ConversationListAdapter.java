@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * A {@link android.support.v7.widget.RecyclerView.Adapter} to bind the list of conversations
- * data to the recyclerview in {@link ConversationsFragment}
+ * A RecyclerView Adapter to bind the list of conversations data to the recyclerview
+ * in {@link ConversationsFragment}
  *
  * @see ConversationListAdapterView for documentation on interface methods
  */
@@ -34,10 +34,10 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
 
     public static final String CONV_MESSAGES_EXTRA = "conversation messages extra";
 
-    private final Context context;
+    private Context context;
+    private ConversationsPresenter presenter;
 
     private List<Conversation> conversations = new ArrayList<>();
-    private ConversationsPresenter presenter;
 
     /**
      * A map from different conversation participants to their details such as full names and
@@ -99,7 +99,6 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
         });
     }
 
-
     /**
      * @param participants list of participant Ids for a particular conversation
      * @return one-on-one recipient id (in current user's scope)
@@ -114,15 +113,16 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     }
 
     /**
-     * Launches {@link MessagesActivity} for the specific conversation
+     * Launches MessageActivity for the specific conversation
      *
      * @param context      context to create a startActivity intent
      * @param conversation conversation to display messages of
      */
     private void openMessagesActivity(Context context, Conversation conversation) {
-        Intent mIntent = new Intent(context, MessagesActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(CONV_MESSAGES_EXTRA, conversation);
+
+        Intent mIntent = new Intent(context, MessagesActivity.class);
         mIntent.putExtras(bundle);
         context.startActivity(mIntent);
     }
@@ -146,24 +146,23 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
     }
 
     @Override
-    public void setParticipantDetailsMap(HashMap<String, PublicUserDetails>
-                                                 participantDetailsMap) {
-        this.participantDetailsMap = participantDetailsMap;
+    public void setParticipantDetailsMap(HashMap<String, PublicUserDetails> map) {
+        this.participantDetailsMap = map;
         notifyDataSetChanged();
     }
 
     /**
-     * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
-     * various views of a conversation list item
+     * A RecyclerView ViewHolder class to encapsulate various views elements
+     * of a conversation list item
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvSender;
         private TextView tvLastMessage;
         private TextView tvTimeSent;
         private CircularImageView civPic;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             tvSender = (TextView) itemView.findViewById(R.id.tvSender);

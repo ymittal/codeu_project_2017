@@ -1,19 +1,17 @@
 package com.google.codeu.chatme.view.tabs;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.codeu.chatme.R;
+import com.google.codeu.chatme.common.view.BaseFragment;
 import com.google.codeu.chatme.model.User;
 import com.google.codeu.chatme.presenter.ProfilePresenter;
 import com.google.codeu.chatme.view.login.LoginActivity;
@@ -21,15 +19,11 @@ import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-public class ProfileFragment extends Fragment implements ProfileView, View.OnClickListener {
+public class ProfileFragment extends BaseFragment implements ProfileView, View.OnClickListener {
 
     private static final int GALLERY_INTENT = 42;
 
-    private OnFragmentInteractionListener mListener;
-
-    private ProgressDialog mProgressDialog;
-
-    // fragment edit texts and buttons
+    // fragment view elements
     private EditText etPassword;
     private EditText etUsername;
     private EditText etFullName;
@@ -43,17 +37,6 @@ public class ProfileFragment extends Fragment implements ProfileView, View.OnCli
      * Required empty public constructor
      */
     public ProfileFragment() {
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ProfileFragment.
-     */
-    public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
     }
 
     @Override
@@ -94,17 +77,10 @@ public class ProfileFragment extends Fragment implements ProfileView, View.OnCli
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -118,16 +94,6 @@ public class ProfileFragment extends Fragment implements ProfileView, View.OnCli
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
         getActivity().finish();
-    }
-
-    @Override
-    public void makeToast(int messageId) {
-        Toast.makeText(getActivity(), getString(messageId), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void makeToast(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -195,22 +161,6 @@ public class ProfileFragment extends Fragment implements ProfileView, View.OnCli
 
         if (requestCode == GALLERY_INTENT && resultCode == Activity.RESULT_OK) {
             presenter.uploadProfilePictureToStorage(data.getData());
-        }
-    }
-
-    public void showProgressDialog(int messsage) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getContext());
-            mProgressDialog.setMessage(getString(messsage));
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    public void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
         }
     }
 

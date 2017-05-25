@@ -25,14 +25,11 @@ import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder>
         implements MessagesAdapterView {
-    /**
-     * List of messages
-     */
-    private List<Message> messages = new ArrayList<>();
 
     private MessagesPresenter presenter;
     private Context context;
 
+    private List<Message> messages = new ArrayList<>();
     private Conversation conversation;
     private HashMap<String, PublicUserDetails> participantDetailsMap;
 
@@ -87,10 +84,20 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         return this.messages.size();
     }
 
+    /**
+     * Retrieves all messages from the database for the specific conversation
+     *
+     * @param conversationId id of conversation to load messages of
+     */
     public void loadConversations(String conversationId) {
         presenter.loadMessages(conversationId);
     }
 
+    /**
+     * Saves a new message to Firebase database
+     *
+     * @param newMessage Message object to be added
+     */
     public void sendMessage(Message newMessage) {
         presenter.sendMessage(newMessage);
     }
@@ -108,16 +115,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     }
 
     /**
-     * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
-     * various views of a message item
+     * A RecyclerView ViewHolder class to encapsulate various views elements
+     * of a message item
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvSender;
         private TextView tvMessage;
         private CardView cvMessage;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             tvSender = (TextView) itemView.findViewById(R.id.tvSender);
             tvMessage = (TextView) itemView.findViewById(R.id.tvMessage);

@@ -2,7 +2,6 @@ package com.google.codeu.chatme.view.tabs;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,35 +10,15 @@ import android.view.ViewGroup;
 
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.common.SimpleDividerItemDecoration;
+import com.google.codeu.chatme.common.view.BaseFragment;
 import com.google.codeu.chatme.view.adapter.UserListAdapter;
 
-public class UsersFragment extends Fragment {
-
-    private OnFragmentInteractionListener mListener;
-
-    private RecyclerView rvUserList;
-    private UserListAdapter userListAdapter;
+public class UsersFragment extends BaseFragment {
 
     /**
      * Required empty public constructor
      */
     public UsersFragment() {
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment UsersFragment.
-     */
-    public static UsersFragment newInstance() {
-        UsersFragment fragment = new UsersFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -56,10 +35,10 @@ public class UsersFragment extends Fragment {
      * @param view inflated {@link UsersFragment} layout view
      */
     private void initializeUI(View view) {
-        rvUserList = (RecyclerView) view.findViewById(R.id.userList);
+        RecyclerView rvUserList = (RecyclerView) view.findViewById(R.id.userList);
         rvUserList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        userListAdapter = new UserListAdapter(getContext());
+        UserListAdapter userListAdapter = new UserListAdapter(getContext());
         rvUserList.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         rvUserList.setAdapter(userListAdapter);
 
@@ -71,17 +50,10 @@ public class UsersFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     /**

@@ -112,7 +112,7 @@ public final class Conversation implements Serializable {
      * A @{@link Comparator} class to order conversation objects according to when their
      * last message was sent (most recent first)
      */
-    public static class LastMessageCompator implements Comparator<Conversation> {
+    public static class LastMessageComparator implements Comparator<Conversation> {
 
         @Override
         public int compare(Conversation conversation, Conversation t1) {

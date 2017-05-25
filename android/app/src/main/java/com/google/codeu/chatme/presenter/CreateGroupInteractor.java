@@ -5,7 +5,7 @@ import android.net.Uri;
 
 import com.google.codeu.chatme.model.Conversation;
 
-public interface CreateGroupInteractor {
+interface CreateGroupInteractor {
 
     /**
      * Uploads group avatar to Firebase Storage and then updates Database

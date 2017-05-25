@@ -2,29 +2,19 @@
     <string name="app_name">ChatMe</string>
 
     <!-- Strings related to login & profile changes  -->
-    <string name="progress_sign_in">Fetching your data...</string>
-    <string name="progress_sign_up">Creating your recipe...</string>
-    <string name="saving_changes">Saving your changes...</string>
+    <string name="progress_sign_in">Fetching your data&#8230;</string>
+    <string name="progress_sign_up">Creating your recipe&#8230;</string>
 
     <string name="title_activity_create_conversation">New Chat</string>
-    <string name="title_activity_add_users">AddUsersActivity</string>
-    <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_new_group">New Group</string>
-    <string name="title_activity_add_participants">Add Participants</string>
-    <string name="title_chats">Chats</string>
-    <string name="title_profile">Profile</string>
-    <string name="title_users">Users</string>
     <string name="title_activity_users">Chat Me</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="err_et_email">Invalid email</string>
     <string name="err_et_password">Enter password</string>
-    <string name="toast_update_name">Name has been updated</string>
     <string name="toast_pwd_name">Password has been updated</string>
-    <string name="progress_upload_pic">Uploading picture...</string>
-    <string name="progress_update_name">Updating full name</string>
+    <string name="progress_upload_pic">Uploading picture&#8230;</string>
     <string name="progress_update_pwd">Updating password</string>
-    <string name="btn_add_group_participants">Add Group Participants</string>
     <string name="et_name_your_new_group">Group Name</string>
     <string name="et_full_name">Full Name</string>
     <string name="et_username">Username</string>
@@ -43,6 +33,20 @@
     <string name="last_seen_ago">last seen %1$s ago</string>
     <string name="last_seen_on">last seen on %1$s</string>
     <string name="sign_out_failure">Sign out failed! Try again later.</string>
+    <string name="active_status_online">Online</string>
+    <string name="et_email">Email</string>
+    <string name="et_password">Password</string>
+    <string name="btn_log_in">Log In</string>
+    <string name="btn_create_account">Create Account</string>
+    <string name="et_type_message">Enter a message&#8230;</string>
+    <string name="tv_conversation_dummy">Conversation</string>
+    <string name="tv_last_message_dummy">Last message</string>
+    <string name="tv_time_sent_dummy">9:03 AM</string>
+    <string name="tv_sender_dummy">Sender</string>
+    <string name="tv_message_dummy">Hello, how are you?</string>
+    <string name="tv_user_name_dummy">User name</string>
+    <string name="tv_last_seen_dummy">Last seen</string>
+    <string name="desc_btn_send_message">Send message</string>
 
     <plurals name="number_mins">
         <item quantity="one">a min</item>

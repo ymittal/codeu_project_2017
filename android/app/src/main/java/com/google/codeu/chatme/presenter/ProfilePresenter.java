@@ -11,8 +11,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.codeu.chatme.R;
 import com.google.codeu.chatme.model.User;
 import com.google.codeu.chatme.utility.FirebaseUtil;
-import com.google.codeu.chatme.view.login.LoginActivity;
-import com.google.codeu.chatme.view.tabs.ProfileFragment;
 import com.google.codeu.chatme.view.tabs.ProfileView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,19 +40,8 @@ public class ProfilePresenter implements ProfileInteractor {
     private DatabaseReference mRootRef;
 
     private final ProfileView view;
-
     private FirebaseAuth mAuth;
-
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-    /**
-     * Sets up the presenter with a reference to the {@link ProfileFragment}.
-     * Additionally, adds {@link com.google.firebase.auth.FirebaseAuth.AuthStateListener}
-     * to {@link FirebaseAuth} instance to detect changed in user authentication status
-     * Refer to {@link ProfilePresenter#postConstruct()}
-     *
-     * @param view a reference to {@link LoginActivity}
-     */
 
     public ProfilePresenter(final ProfileView view) {
         this.view = view;
@@ -79,9 +66,7 @@ public class ProfilePresenter implements ProfileInteractor {
         };
     }
 
-    /**
-     * Get current user's profile information and store in User object
-     */
+    @Override
     public void getUserProfile() {
         mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid())
                 .addValueEventListener(new ValueEventListener() {
@@ -136,7 +121,7 @@ public class ProfilePresenter implements ProfileInteractor {
      */
     private void updateUserPhotoUrl(String downloadUri) {
         mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid())
-                .child("photoUrl").setValue(downloadUri.toString());
+                .child("photoUrl").setValue(downloadUri);
 
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setPhotoUri(Uri.parse(downloadUri))
@@ -155,9 +140,7 @@ public class ProfilePresenter implements ProfileInteractor {
                 });
     }
 
-    /**
-     * Signs out current user
-     */
+    @Override
     public void signOut() {
         final DatabaseReference userRef = mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid());
 
@@ -182,13 +165,7 @@ public class ProfilePresenter implements ProfileInteractor {
         });
     }
 
-    /**
-     * Updates current user's profile based on provided parameters
-     *
-     * @param fullName user's full name
-     * @param username user's username
-     * @param password user's password
-     */
+    @Override
     public void updateUser(String fullName, String username, String password) {
         updateFullName(fullName);
         updateUserName(username);
@@ -268,9 +245,7 @@ public class ProfilePresenter implements ProfileInteractor {
                 });
     }
 
-    /**
-     * Delete current user's account from firebase auth and database
-     */
+    @Override
     public void deleteAccount() {
         mRootRef.child("users").child(FirebaseUtil.getCurrentUserUid())
                 .removeValue();

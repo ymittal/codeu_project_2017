@@ -6,15 +6,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class LastMessageCompatorTest {
+public class LastMessageComparatorTest {
 
-    private Conversation.LastMessageCompator compator;
+    private Conversation.LastMessageComparator compator;
     private Conversation conversation1;
     private Conversation conversation2;
 
     @Before
     public void setUp() throws Exception {
-        compator = new Conversation.LastMessageCompator();
+        compator = new Conversation.LastMessageComparator();
 
         conversation1 = new Conversation();
         conversation1.setLastMessage(new Message());

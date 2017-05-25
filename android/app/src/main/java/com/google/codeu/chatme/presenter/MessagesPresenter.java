@@ -14,7 +14,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -99,7 +98,6 @@ public class MessagesPresenter implements MessagesInteractor {
                         Log.i(TAG, "getParticipantDetails:retrieved "
                                 + String.valueOf(response.body().size()));
 
-                        Log.d("LOG_TAG", String.valueOf(Arrays.asList(response.body())));
                         view.setParticipantDetailsMap(response.body());
                     }
 

@@ -65,7 +65,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
                     }
                 }
 
-                Collections.sort(conversations, new Conversation.LastMessageCompator());
+                Collections.sort(conversations, new Conversation.LastMessageComparator());
                 Log.i(TAG, "loadConversations:retrieved " + conversations.size());
 
                 // updates list of conversations (and the corresponding views) in adapter

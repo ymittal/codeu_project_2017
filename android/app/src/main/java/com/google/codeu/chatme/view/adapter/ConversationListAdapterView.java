@@ -6,11 +6,7 @@ import com.google.codeu.chatme.model.PublicUserDetails;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * An interface to handle presenter-delegated actions in order to
- * update list of conversations in {@link ConversationListAdapter}
- */
-public interface ConversationListAdapterView {
+interface ConversationListAdapterView {
 
     /**
      * Resets the list of conversations in {@link ConversationListAdapter}
@@ -20,7 +16,7 @@ public interface ConversationListAdapterView {
     void setChatList(List<Conversation> conversations);
 
     /**
-     * Resets the map from participant ids to their details {@link ConversationListAdapter}
+     * Resets the map from participant ids to their details
      *
      * @param map map from participant ids to details
      */

@@ -43,17 +43,16 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
     public static final String GROUP_CONV_EXTRA = "create group conversation extra";
 
+    private CreateConversationPresenter createConvPresenter;
+    private UserPresenter userPresenter;
+    private Context context;
+
     private List<User> users = new ArrayList<>();
 
     /**
      * Multi-selector to select multiple user list items
      */
     private MultiSelector mMultiSelector = new MultiSelector();
-
-    private CreateConversationPresenter createConvPresenter;
-    private UserPresenter userPresenter;
-
-    private final Context context;
 
     public UserListAdapter(Context context) {
         userPresenter = new UserPresenter(this);
@@ -87,7 +86,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         }
 
         if (user.getIsOnline()) {
-            holder.tvLastSeen.setText("Online");
+            holder.tvLastSeen.setText(R.string.active_status_online);
         } else {
             holder.tvLastSeen.setText(user.getReadableLastSeen(context));
         }
@@ -106,27 +105,29 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
     @Override
     public void openMessageActivity(Conversation conversation) {
-        Intent mIntent = new Intent(context, MessagesActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(ConversationListAdapter.CONV_MESSAGES_EXTRA, conversation);
+
+        Intent mIntent = new Intent(context, MessagesActivity.class);
         mIntent.putExtras(bundle);
         context.startActivity(mIntent);
     }
 
     @Override
     public void openCreateGroupActivity(Conversation conversation) {
-        Intent mIntent = new Intent(context, CreateGroupActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(GROUP_CONV_EXTRA, conversation);
+
+        Intent mIntent = new Intent(context, CreateGroupActivity.class);
         mIntent.putExtras(bundle);
         context.startActivity(mIntent);
     }
 
     /**
-     * A {@link android.support.v7.widget.RecyclerView.ViewHolder} class to encapsulate
-     * various views of a user list item
+     * A RecyclerView ViewHolder class to encapsulate various views elements
+     * of a user list item
      */
-    public class ViewHolder extends SwappingHolder implements View.OnClickListener,
+    class ViewHolder extends SwappingHolder implements View.OnClickListener,
             View.OnLongClickListener {
 
         private TextView tvName;
@@ -135,7 +136,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         private String userId;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView, mMultiSelector);
             setSelectionModeBackgroundDrawable(getSelectedBackground());
             setSelectionModeStateListAnimator(null);
@@ -222,7 +223,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
          * Launches CreateGroupActivity if create group item was clicked and at least
          * one user was selected
          *
-         * @param mode
+         * @param mode action mode
          * @param menuItem menu item clicked
          * @return true if click is handled properly
          */

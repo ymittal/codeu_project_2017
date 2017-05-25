@@ -4,7 +4,7 @@ import com.google.codeu.chatme.model.Message;
 
 import java.util.List;
 
-public interface MessagesInteractor {
+interface MessagesInteractor {
 
     /**
      * Retrieves all messages from the database for the specific conversation

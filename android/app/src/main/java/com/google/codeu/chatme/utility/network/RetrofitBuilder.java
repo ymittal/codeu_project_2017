@@ -8,7 +8,7 @@ public class RetrofitBuilder {
     /**
      * URL at which Firebase Functions API is deployed
      */
-    public static final String BASE_URL = "https://us-central1-chatme-e99a4.cloudfunctions.net/";
+    private static final String BASE_URL = "https://us-central1-chatme-e99a4.cloudfunctions.net/";
 
     /**
      * @return Retrofit service to make Firebase Functions call
@@ -19,7 +19,6 @@ public class RetrofitBuilder {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        FirebaseService service = retrofit.create(FirebaseService.class);
-        return service;
+        return retrofit.create(FirebaseService.class);
     }
 }

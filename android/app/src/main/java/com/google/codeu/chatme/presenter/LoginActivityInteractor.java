@@ -6,7 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
  * This interface provides functions which primarily relate to login
  * and sign up functionality of this Firebase-powered chat application
  */
-public interface LoginActivityInteractor {
+interface LoginActivityInteractor {
 
     /**
      * Attempts to create an account with given account credentials
@@ -14,7 +14,7 @@ public interface LoginActivityInteractor {
      * @param email    user email
      * @param password user password
      */
-    public void signUp(String email, String password);
+    void signUp(String email, String password);
 
     /**
      * Attempts to log user in with given credentials
@@ -22,17 +22,15 @@ public interface LoginActivityInteractor {
      * @param email    user email
      * @param password user password
      */
-    public void signIn(String email, String password);
+    void signIn(String email, String password);
 
     /**
-     * Adds {@link com.google.firebase.auth.FirebaseAuth.AuthStateListener} to
-     * {@link FirebaseAuth} which is the entry point to Firebase SDK
+     * Adds Auth Listener to {@link FirebaseAuth}
      */
-    public void setAuthStateListener();
+    void setAuthStateListener();
 
     /**
-     * Removes {@link com.google.firebase.auth.FirebaseAuth.AuthStateListener} from
-     * {@link FirebaseAuth} if it exists
+     * Removes Auth Listener from {@link FirebaseAuth}
      */
-    public void removeAuthStateListener();
+    void removeAuthStateListener();
 }

@@ -27,9 +27,6 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
 
     private DatabaseReference mRootRef;
 
-    /**
-     * @param view view object
-     */
     public CreateGroupPresenter(CreateGroupView view) {
         this.view = view;
     }
@@ -92,7 +89,7 @@ public class CreateGroupPresenter implements CreateGroupInteractor {
     @Override
     public void updateGroupPhotoUrl(String downloadUri, String conversationId) {
         mRootRef.child("conversations").child(conversationId).child("photoUrl")
-                .setValue(downloadUri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                .setValue(downloadUri).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
