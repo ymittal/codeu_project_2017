@@ -4,30 +4,30 @@
     android:id="@+id/activity_splash_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ChatMe_Red"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.google.codeu.chatme.view.SplashScreen"
-    android:background="@color/ChatMe_Red">
+    tools:context="com.google.codeu.chatme.view.SplashScreen">
 
     <ProgressBar
+        android:id="@+id/progressBar5"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="243dp"
-        android:id="@+id/progressBar5" />
+        android:layout_marginBottom="243dp" />
 
     <TextView
-        android:text="Chat Me"
-        android:textSize="32sp"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/progressBar5"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="128dp"
-        android:id="@+id/textView" />
+        android:text="@string/app_name"
+        android:textSize="32sp" />
 
 </RelativeLayout>

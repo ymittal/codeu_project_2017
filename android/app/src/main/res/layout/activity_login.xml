@@ -18,7 +18,7 @@
         android:layout_above="@+id/etEmail"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="64dp"
-        android:text="ChatMe"
+        android:text="@string/app_name"
         android:textColor="@color/ChatMe_Blue"
         android:textSize="30sp"
         android:textStyle="bold" />
@@ -30,7 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:ems="10"
-        android:hint="Email"
+        android:hint="@string/et_email"
         android:inputType="textEmailAddress" />
 
     <EditText
@@ -41,7 +41,7 @@
         android:layout_below="@+id/etEmail"
         android:layout_centerHorizontal="true"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/et_password"
         android:inputType="textPassword" />
 
     <Button
@@ -53,7 +53,7 @@
         android:layout_below="@+id/etPassword"
         android:layout_marginTop="16dp"
         android:background="@color/ChatMe_Blue"
-        android:text="Log In"
+        android:text="@string/btn_log_in"
         android:textColor="@android:color/background_light"
         android:textStyle="bold" />
 
@@ -66,7 +66,7 @@
         android:layout_below="@+id/btnLogin"
         android:layout_marginTop="17dp"
         android:background="@color/ChatMe_Blue"
-        android:text="Create Account"
+        android:text="@string/btn_create_account"
         android:textColor="@android:color/background_light"
         android:textStyle="bold" />
 
