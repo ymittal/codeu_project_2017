@@ -163,6 +163,8 @@ public class ProfilePresenter implements ProfileInteractor {
                             }
                         }
                     });
+                } else {
+                    view.makeToast(R.string.sign_out_failure);
                 }
             }
         });
