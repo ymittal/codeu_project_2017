@@ -80,6 +80,9 @@ exports.setUniqueUsername = functions.auth.user().onCreate(event => {
 	});
 });
 
+/**
+ * Sends notifications to conversation participants when a new message is created
+ */
 exports.sendNotificationOnNewMessage = functions.database.ref("/messages/{messageId}")
 	.onWrite(event => {
 		const snapshot = event.data;
@@ -91,8 +94,11 @@ exports.sendNotificationOnNewMessage = functions.database.ref("/messages/{messag
 		const message = snapshot.val();
 		var ref = admin.database().ref("conversations");
 
-		ref.child(message.conversation).child("participants").once("value", function(snapshot) {
-			var participants = snapshot.val();
+		ref.child(message.conversation).once("value", function(snapshot) {
+			var conversation = snapshot.val();
+			conversation["id"] = message.conversation;
+
+			var participants = conversation.participants.slice();
 			// do not send notification to self
 			const authorIdx = participants.indexOf(message.author);
 			participants.splice(authorIdx, 1);
@@ -100,16 +106,22 @@ exports.sendNotificationOnNewMessage = functions.database.ref("/messages/{messag
 			var promises = [];
 			// creates promises to retrieve tokens of users to send notification to
 			for (var i = 0; i < participants.length; ++i) {
-				const promise = admin.database().ref(`/users/${participants[i]}/instanceId`).once('value');
+				const promise = admin.database().ref(`/users/${participants[i]}/instanceId`)
+					.once("value");
 				promises.push(promise);
 			}
 
 			admin.database().ref("users").child(message.author).child("fullName")
 				.once("value", function(snapshot) {
+					const senderName = (conversation.isGroup ? conversation.groupName + ": " : "") + snapshot.val();
 					const payload = {
-						notification: {
-							title: `${snapshot.val()} sent a message`,
-							body: message.content
+						"notification": {
+							"title": senderName,
+							"body": message.content,
+							"click_action": "LAUNCH_MESSAGES_ACTIVITY"
+						},
+						"data": {
+							"notif_conv": JSON.stringify(conversation)
 						}
 					}
 
@@ -117,10 +129,11 @@ exports.sendNotificationOnNewMessage = functions.database.ref("/messages/{messag
 						var tokens = [];
 						for (var i = 0; i < results.length; ++i) {
 							const token = results[i].val();
-							if (token.length > 0) {
+							if (token != null && token.length > 0) {
 								tokens.push(token);
 							}
 						}
+						console.log("Pushing notifications to ", tokens);
 
 						// pushes notification to device(s)
 						admin.messaging().sendToDevice(tokens, payload);

@@ -15,10 +15,18 @@ import com.google.codeu.chatme.common.view.BaseActivity;
 import com.google.codeu.chatme.model.Conversation;
 import com.google.codeu.chatme.model.Message;
 import com.google.codeu.chatme.utility.FirebaseUtil;
-import com.google.codeu.chatme.view.adapter.ConversationListAdapter;
 import com.google.codeu.chatme.view.adapter.MessagesAdapter;
+import com.google.gson.Gson;
+
+import static com.google.codeu.chatme.view.adapter.ConversationListAdapter.CONV_MESSAGES_EXTRA;
 
 public class MessagesActivity extends BaseActivity implements View.OnClickListener {
+
+    /**
+     * Key of the (conversation) string extra sent from Firebase Cloud Messaging (FCM)
+     * in data payload (refer to /backend/functions/index.js#sendNotificationOnNewMessage)
+     */
+    public static final String NOTIF_CONV = "notif_conv";
 
     private EditText etTypeMessage;
     private ImageView btnSend;
@@ -37,7 +45,12 @@ public class MessagesActivity extends BaseActivity implements View.OnClickListen
 
         // retrieves conversation to display messages of
         Bundle bundle = getIntent().getExtras();
-        conversation = (Conversation) bundle.getSerializable(ConversationListAdapter.CONV_MESSAGES_EXTRA);
+        conversation = (Conversation) bundle.getSerializable(CONV_MESSAGES_EXTRA);
+
+        // conversation object sent as a string in notification's data payload
+        if (conversation == null) {
+            conversation = new Gson().fromJson(bundle.getString(NOTIF_CONV), Conversation.class);
+        }
 
         setupUI();
     }

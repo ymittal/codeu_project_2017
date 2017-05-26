@@ -29,6 +29,10 @@
         <activity
             android:name=".view.message.MessagesActivity"
             android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <action android:name="LAUNCH_MESSAGES_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.tabs.TabsActivity" />

@@ -12,6 +12,10 @@ public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
 
     private static final String TAG = MyFirebaseInstanceIdService.class.getName();
 
+    /**
+     * Generates a new app instance token and saves the same to current user's database
+     * node
+     */
     @Override
     public void onTokenRefresh() {
         String instanceId = FirebaseInstanceId.getInstance().getToken();
