@@ -18,6 +18,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.IOException;
 
 /**
  * Following MVP design pattern, this class encapsulates the functionality to
@@ -51,6 +54,7 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    refreshInstanceId();
                     setOnlineStatus();
                     view.openTabsActivity();
                 } else {
@@ -58,6 +62,21 @@ public class LoginActivityPresenter implements LoginActivityInteractor {
                 }
             }
         };
+    }
+
+    private void refreshInstanceId() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                    // forces call to MyFirebaseInstanceIdService#onTokenRefresh
+                    FirebaseInstanceId.getInstance().getToken();
+                } catch (IOException e) {
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+        }).start();
     }
 
     /**
