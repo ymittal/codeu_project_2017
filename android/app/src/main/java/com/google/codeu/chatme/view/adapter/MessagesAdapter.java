@@ -92,6 +92,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     }
 
     public void sendMessage(Message newMessage) {
+        conversation.resetReadLastMessage(newMessage.author);
         presenter.sendMessage(newMessage);
     }
 

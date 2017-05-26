@@ -93,6 +93,13 @@ public class MessagesActivity extends AppCompatActivity
         return newMessage;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        String currentUser = FirebaseUtil.getCurrentUserUid();
+        conversation.setCurrentlyViewing(currentUser, false);
+    }
+
     /**
      * An instance of TextWatcher to detect changes on etTypeMessage
      */

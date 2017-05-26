@@ -2,6 +2,7 @@ package com.google.codeu.chatme.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -71,6 +72,9 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
                 holder.tvSender.setText(pDetails.getFullName());
                 holder.setHolderPicture(pDetails.getPhotoUrl(), Boolean.FALSE);
                 holder.tvLastMessage.setText(conversation.getLastMessageContent());
+                String uid = FirebaseUtil.getCurrentUserUid();
+
+
             } else {
                 String lastSenderId = conversation.getLastMessage().getAuthor();
                 String lastSenderName = participantDetailsMap.get(lastSenderId).getFullName();
@@ -89,6 +93,13 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
                 holder.tvSender.setText(conversation.getGroupName());
                 holder.setHolderPicture(conversation.getPhotoUrl(), Boolean.TRUE);
             }
+        }
+
+        if(!conversation.hasReadLastMessage(FirebaseUtil.getCurrentUserUid())) {
+            holder.tvLastMessage.setText("unread");
+            //holder.tvLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+        } else {
+            holder.tvLastMessage.setTypeface(null, Typeface.NORMAL);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +135,10 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
         Bundle bundle = new Bundle();
         bundle.putSerializable(CONV_MESSAGES_EXTRA, conversation);
         mIntent.putExtras(bundle);
+        conversation.resetReadLastMessage(null);
+        String currentUser = FirebaseUtil.getCurrentUserUid();
+        conversation.setLastRead(currentUser, conversation.getLastMessage().getId());
+        conversation.setCurrentlyViewing(currentUser, true);
         context.startActivity(mIntent);
     }
 
