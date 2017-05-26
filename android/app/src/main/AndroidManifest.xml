@@ -13,10 +13,10 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@mipmap/ic_launcher" />
+            android:resource="@drawable/ic_send" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@android:color/white" />
+            android:resource="@color/msgIncoming" />
 
         <activity android:name=".view.login.LoginActivity" />
 
@@ -48,10 +48,9 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".common.MyFirebaseInstanceIdService">
+        <service android:name=".common.MyFirebaseInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
