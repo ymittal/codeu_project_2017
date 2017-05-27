@@ -51,7 +51,7 @@ public class ConversationsPresenter implements ConversationsInteractor {
 
     @Override
     public void loadConversations() {
-        Query conversationsQuery = mRootRef.child("conversations").orderByChild("lastMessage").startAt("");
+        Query conversationsQuery = mRootRef.child("conversations");
         conversationsQuery.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -59,7 +59,8 @@ public class ConversationsPresenter implements ConversationsInteractor {
                 ArrayList<Conversation> conversations = new ArrayList<>();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Conversation conv = data.getValue(Conversation.class);
-                    if (conv.getParticipants().contains(FirebaseUtil.getCurrentUserUid())) {
+                    if (conv.getParticipants().contains(FirebaseUtil.getCurrentUserUid())
+                            && (conv.getLastMessage() != null || conv.getIsGroup())) {
                         conv.setId(data.getKey());
                         conversations.add(conv);
                     }

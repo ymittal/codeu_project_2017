@@ -81,12 +81,18 @@ public final class Conversation implements Serializable {
 
     @Exclude
     public String getLastMessageContent() {
-        return this.lastMessage.getContent();
+        return lastMessage == null ? "" : lastMessage.getContent();
     }
 
     @Exclude
     public String getReadableLastMessageTime() {
-        return this.lastMessage.getReadableTime();
+        if (lastMessage == null) {
+            Message dummy = new Message();
+            dummy.setTimeCreated(this.timeCreated);
+            return dummy.getReadableTime();
+        } else {
+            return lastMessage.getReadableTime();
+        }
     }
 
     /**
@@ -115,9 +121,10 @@ public final class Conversation implements Serializable {
     public static class LastMessageComparator implements Comparator<Conversation> {
 
         @Override
-        public int compare(Conversation conversation, Conversation t1) {
-            return Long.compare(t1.getLastMessage().getTimeCreated(),
-                    conversation.getLastMessage().getTimeCreated());
+        public int compare(Conversation c1, Conversation c2) {
+            long t1 = c1.lastMessage == null ? c1.timeCreated : c1.lastMessage.getTimeCreated();
+            long t2 = c2.lastMessage == null ? c2.timeCreated : c2.lastMessage.getTimeCreated();
+            return Long.compare(t2, t1);    // for descending order
         }
     }
 }

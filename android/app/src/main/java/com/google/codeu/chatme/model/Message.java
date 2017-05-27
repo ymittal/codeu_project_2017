@@ -65,13 +65,13 @@ public final class Message implements Serializable {
 
     @Exclude
     public String getReadableTime() {
-        long lastMessageTime = this.timeCreated;
-        if (DateUtils.isToday(lastMessageTime)) {
-            return DateTimeUtil.getReadableTime(lastMessageTime);
-        } else if (DateTimeUtil.isYesterday(lastMessageTime)) {
+        long time = this.timeCreated;
+        if (DateUtils.isToday(time)) {
+            return DateTimeUtil.getReadableTime(time);
+        } else if (DateTimeUtil.isYesterday(time)) {
             return "Yesterday";
         } else {
-            return DateTimeUtil.getReadableDate(lastMessageTime);
+            return DateTimeUtil.getReadableDate(time);
         }
     }
 
