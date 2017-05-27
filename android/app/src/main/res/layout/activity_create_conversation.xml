@@ -18,8 +18,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/userList"
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.google.codeu.chatme.view.tabs.UsersFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
