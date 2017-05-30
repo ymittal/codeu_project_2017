@@ -72,13 +72,17 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
                 holder.setHolderPicture(pDetails.getPhotoUrl(), Boolean.FALSE);
                 holder.tvLastMessage.setText(conversation.getLastMessageContent());
             } else {
-                String lastSenderId = conversation.getLastMessage().getAuthor();
-                String lastSenderName = participantDetailsMap.get(lastSenderId).getFullName();
-
                 holder.tvSender.setText(conversation.getGroupName());
                 holder.setHolderPicture(conversation.getPhotoUrl(), Boolean.TRUE);
-                holder.tvLastMessage.setText(lastSenderName + ": "
-                        + conversation.getLastMessageContent());
+
+                if (conversation.getLastMessage() != null) {
+                    String lastSenderId = conversation.getLastMessage().getAuthor();
+                    String lastSenderName = participantDetailsMap.get(lastSenderId).getFullName();
+                    holder.tvLastMessage.setText(lastSenderName + ": "
+                            + conversation.getLastMessageContent());
+                } else {
+                    holder.tvLastMessage.setText(R.string.tap_to_send_first_message);
+                }
             }
         } else {
             // http getDetailsFromIds has not completed yet
