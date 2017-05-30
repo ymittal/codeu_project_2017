@@ -146,15 +146,20 @@ public class ProfilePresenter implements ProfileInteractor {
 
         userRef.child("isOnline").setValue(Boolean.FALSE, new CompletionListener() {
             @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null) {
+            public void onComplete(DatabaseError err, DatabaseReference ref) {
+                if (err == null) {
                     userRef.child("lastSeen").setValue(ServerValue.TIMESTAMP, new CompletionListener() {
                         @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if (databaseError == null) {
-                                mAuth.signOut();
-                            } else {
-                                view.makeToast(R.string.sign_out_failure);
+                        public void onComplete(DatabaseError err, DatabaseReference ref) {
+                            if (err == null) {
+                                userRef.child("instanceId").removeValue(new CompletionListener() {
+                                    @Override
+                                    public void onComplete(DatabaseError err, DatabaseReference ref) {
+                                        if (err == null) {
+                                            mAuth.signOut();
+                                        }
+                                    }
+                                });
                             }
                         }
                     });
