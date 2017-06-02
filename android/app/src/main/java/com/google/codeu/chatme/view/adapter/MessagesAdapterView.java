@@ -21,4 +21,9 @@ public interface MessagesAdapterView {
      * @param body map from participant ids to details
      */
     void setParticipantDetailsMap(HashMap<String, PublicUserDetails> body);
+
+    /**
+     * Sets title of MessagesActivity for one-on-one and group conversations
+     */
+    void setScreenTitle();
 }
