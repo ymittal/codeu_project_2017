@@ -19,10 +19,12 @@ This application grew from what was originally a GUI application to what it is n
  Import the entire project in [Android Studio](https://developer.android.com/studio/index.html) and download all SDK requirements.
  
 To properly run the application, you will need to download [google-services.json](https://drive.google.com/open?id=0B_MDZBcgZXIJellRT2VHLUh1ejA) and save it in the `android/app/` directory
-    * Install project dependencies from __Tools > Android > Sync Gradle with Project Files__
-    * Run `app` module on an emulator or an Android device 
 
-    **Note:** Please disable Instant Run feature on Android Studio before running the app. [`SugarORM`](https://github.com/satyan/sugar) has a [history](https://github.com/satyan/sugar/issues/75) of not creating tables when Instant Run is on.
+   * Install project dependencies from __Tools > Android > Sync Gradle with Project Files__
+   * Run `app` module on an emulator or an Android device
+ 
+
+    **Note:** Please disable Instant Run feature on Android Studio before running the app. [SugarORM](https://github.com/satyan/sugar) has a [history](https://github.com/satyan/sugar/issues/75) of not creating tables when Instant Run is on.
 
 ## Testing
 
