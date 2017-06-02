@@ -17,6 +17,8 @@ This application grew from what was originally a GUI application to what it is n
 ### Installation
 
  Import the entire project in [Android Studio](https://developer.android.com/studio/index.html) and download all SDK requirements.
+ 
+To properly run the application, you will need to download [google-services.json](https://drive.google.com/open?id=0B_MDZBcgZXIJellRT2VHLUh1ejA) and save it in the `android/app/` directory
     * Install project dependencies from __Tools > Android > Sync Gradle with Project Files__
     * Run `app` module on an emulator or an Android device 
 
