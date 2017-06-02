@@ -1,122 +1,63 @@
+# ChatMe
 
-# CODEU CHAT SERVER | README
+ChatMe is a Firebase-powered chat application built for Android. This app was developed for the Google CodeU Spring 2017 program. It grew from what was originally a simple Java Swing based GUI application to its current state over a period of three months.
 
+All user data is being stored using Firebase Database and Storage. We also authenticate our users through Firebase Authentication. Refer to [Firebase Docs](https://firebase.google.com/docs/) for details.
 
-## DISCLAIMER
+## Getting started
 
-CODEU is a program created by Google to develop the skills of future software
-engineers. This project is not an offical Google Product. This project is a
-playground for those looking to develop their coding and software engineering
-skills.
+### Prerequisites
 
+* Android Studio, preferably 2.3.+
+* Android SDK Build Tools v25.0.1
+* Emulator or Android Kitkat 4.4 or above 
 
-## ENVIRONMENT
+### Installation
 
-All instructions here are relative to a LINUX environment. There will be some
-differences if you are working on a non-LINUX system. We will not support any
-other development environment.
+* Download [`google-services.json`](https://drive.google.com/open?id=0B_MDZBcgZXIJellRT2VHLUh1ejA) and save the file inside `android/app/` directory.
+* Import `android/` folder in [Android Studio](https://developer.android.com/studio/index.html) and download all SDK requirements.
+* Install project dependencies from __Tools > Android > Sync Gradle with Project Files__
+* Run `app` module on an emulator or an Android device
 
-This project was built using JAVA 7. It is recommended that you install
-JAVA&nbsp;7 when working with this project.
+## Navigating ChatMe
 
+At startup, a user is prompted to create an account or log in using their email and password. On sign up, a unique username is assigned using their email address. On a successful log in, the application navigates to the conversations screen where they may create a new conversation (one-on-one or group) or navigate to their profile or the list of users.
 
-## GETTING STARTED
+#### Updating Profile
 
-  1. To build the project:
-       ```
-       $ sh clean.sh
-       $ sh make.sh
-       ```
+Users can update their profile picture, full name (name visible to the other users) and their password by navigating to the `ProfileFragment`. Be sure to click **Save Changes** after making your desired changes.
 
-  1. To test the project:
-       ```
-       $ sh test.sh
-       ```
+#### New Conversation
 
-  1. To run the project you will need to run both the client and the server. Run
-     the following two commands in separate shells:
+Conversations can be initiated by navigating to `UsersFragment` or by clicking the **+** symbol on `ConversationsFragment`. To create a 1-1 conversation, simply click on the user you wish to chat with. To create a group, long press on a user and proceed to select the users you wish to add to the group. Afterwads, click **Create Group** and you will be able to provide a group avatar and name before officially creating the group.
 
-       ```
-       $ sh run_server.sh <team_id> <team_secret> <port> <persistent-dir>
-       $ sh run_client.sh <host> <port>
-       ```
+#### Sending Messages
 
-     You must specify the following startup arguments for `run_server.sh:
-     + `<team_id>` and `<team_secret>`: a numeric id for your team, and a secret
-       code, which are used to authenticate your server with the Relay server.
-       You can specify any integer value for `<team_id>`, and a value expressed
-       in hexadecimal format (using numbers `0-9` and letters in the range
-       `A-F`) for `<team_secret>` when you launch the server in your local setup
-       since it will not connect to the Relay server.
-     + `<port>`: the TCP port that your Server will listen on for connections
-       from the Client. You can use any value between 1024 and 65535, as long as
-       there is no other service currently listening on that port in your
-       system. The server will return an error:
+To send and receive messages, navigate to `ConversationsFragment` and select the conversation you would like to view the messages of. Once there, you may send messages or view all the messages sent in the conversation previously.
 
-         ```
-         java.net.BindException: Address already in use (Bind failed)
-         ```
+#### Notifications
 
-       if the port is already in use.
-     + `<persistent-dir>`: the path where you want the server to save data between
-       runs.
+When someone sends you a message while the app is not in focus (minimized or killed), a notification in the status bar will be displayed, clicking on which will take you directly to the specific conversation.
 
-     The startup arguments for `run_client.sh` are the following:
-     + `<host>`: the hostname or IP address of the computer on which the server
-       is listening. If you are running server and client on the same computer,
-       you can use `localhost` here.
-     + `<port>`: the port on which your server is listening. Must be the same
-       port number you have specified when you launched `run_server.sh`.
+## Testing
 
-All running images write informational and exceptional events to log files.
-The default setting for log messages is "INFO". You may change this to get
-more or fewer messages, and you are encouraged to add more LOG statements
-to the code. The logging is implemented in `codeu.chat.util.Logger.java`,
-which is built on top of `java.util.logging.Logger`, which you can refer to
-for more information.
+The `JUnit` tests can be found in `android/app/src/test` directory. Of course, you do not need a device to run these tests.
 
-In addition to your team's client and server, the project also includes a
-Relay Server and a script that runs it (`run_relay.sh`).
-This is not needed to get started with the project.
+In Android, UI tests are called Instrumentation Tests, and they can be found in `android/app/src/androidTest`. You can run the Instrumentation Tests as follows:
+* Use the left pane to change the Project view to __Project__ (default)
+* Open `app/src/androidTest/`
+* Right-click on `androidTest/java/` and click __Run 'All Tests'__
+* Select your preferred device to run UI tests on
 
+## Documentation
 
-## Finding your way around the project
+Please have a look at [**ChatMe Design Doc**](https://docs.google.com/document/d/1vKqHBiuqkTzTM-3H5VVxTm3h1JvIpV3foNUE4OLFWZM/edit?usp=sharing) for extensive documentation on our application, the technologies utilized, and our design process.
 
-All the source files (except test-related source files) are in
-`./src/codeu/chat`.  The test source files are in `./test/codeu/chat`. If you
-use the supplied scripts to build the project, the `.class` files will be placed
-in `./bin`. There is a `./third_party` directory that holds the jar files for
-JUnit (a Java testing framework). Your environment may or may not already have
-this installed. The supplied scripts use the version in `./third_party`.
+## Authors
 
-Finally, there are some high-level design documents in the project Wiki. Please
-review them as they can help you find your way around the sources.
+This project is brought to you by the following people:
+* [**Yash Mittal**](https://github.com/ymittal) <yashmittal2009@gmail.com>
+* [**Brandon Long**](https://github.com/blong1996) <dev.brandon.long@gmail.com>
+* [**Cory Brooks**](https://github.com/corybrooks) <corybrooks007@gmail.com>
 
-
-
-## Source Directories
-
-The major project components have been separated into their own packages. The
-main packages/directories under `src/codeu/chat` are:
-
-### codeu.chat.client
-
-Classes for building the two clients (`codeu.chat.ClientMain` and
-`codeu.chat.SimpleGuiClientMain`).
-
-### codeu.chat.server
-
-Classes for building the server (`codeu.chat.ServerMain`).
-
-### codeu.chat.relay
-
-Classes for building the Relay Server (`codeu.chat.RelayMain`). The Relay Server
-is not needed to get started.
-
-### codeu.chat.common
-
-Classes that are shared by the clients and servers.
-
-### codeu.chat.util
-
-Some basic infrastructure classes used throughout the project.
+Let us know if you have any questions about CodeU program or the project.
