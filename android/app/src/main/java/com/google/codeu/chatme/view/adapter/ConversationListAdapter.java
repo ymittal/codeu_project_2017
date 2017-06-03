@@ -107,7 +107,7 @@ public class ConversationListAdapter extends RecyclerView.Adapter<ConversationLi
      * @param participants list of participant Ids for a particular conversation
      * @return one-on-one recipient id (in current user's scope)
      */
-    private String getDirectRecipientId(List<String> participants) {
+    public static String getDirectRecipientId(List<String> participants) {
         for (String id : participants) {
             if (!id.equals(FirebaseUtil.getCurrentUserUid())) {
                 return id;

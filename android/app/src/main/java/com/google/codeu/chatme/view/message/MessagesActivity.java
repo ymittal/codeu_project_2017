@@ -70,12 +70,12 @@ public class MessagesActivity extends BaseActivity implements View.OnClickListen
         etTypeMessage.addTextChangedListener(messageTextWatcher);
 
         RecyclerView rvMessageList = (RecyclerView) findViewById(R.id.rvMessageList);
-        messagesAdapter = new MessagesAdapter(getApplicationContext(), conversation);
+        messagesAdapter = new MessagesAdapter(this, conversation);
 
         rvMessageList.setLayoutManager(new LinearLayoutManager(this));
         rvMessageList.setAdapter(messagesAdapter);
 
-        messagesAdapter.loadConversations(conversation.getId());
+        messagesAdapter.loadMessages(conversation.getId());
     }
 
     @Override

@@ -17,10 +17,13 @@ import com.google.codeu.chatme.model.Message;
 import com.google.codeu.chatme.model.PublicUserDetails;
 import com.google.codeu.chatme.presenter.MessagesPresenter;
 import com.google.codeu.chatme.utility.FirebaseUtil;
+import com.google.codeu.chatme.view.message.MessagesActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.google.codeu.chatme.view.adapter.ConversationListAdapter.getDirectRecipientId;
 
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder>
@@ -40,9 +43,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         this.context = context;
         this.conversation = conversation;
 
-        if (conversation.getIsGroup()) {
-            presenter.getParticipantDetails(conversation.getParticipants());
-        }
+        presenter.getParticipantDetails(conversation.getParticipants());
     }
 
     @Override
@@ -89,7 +90,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
      *
      * @param conversationId id of conversation to load messages of
      */
-    public void loadConversations(String conversationId) {
+    public void loadMessages(String conversationId) {
         presenter.loadMessages(conversationId);
     }
 
@@ -111,7 +112,21 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public void setParticipantDetailsMap(HashMap<String, PublicUserDetails> body) {
         this.participantDetailsMap = body;
+        setScreenTitle();
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void setScreenTitle() {
+        String title;
+        if (conversation.getIsGroup()) {
+            title = conversation.getGroupName();
+        } else {
+            String recipientId = getDirectRecipientId(conversation.getParticipants());
+            PublicUserDetails pDetails = participantDetailsMap.get(recipientId);
+            title = pDetails.getFullName();
+        }
+        ((MessagesActivity) context).setTitle(title);
     }
 
     /**
