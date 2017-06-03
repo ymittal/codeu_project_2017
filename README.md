@@ -19,6 +19,10 @@ All user data is being stored using Firebase Database and Storage. We also authe
 * Install project dependencies from __Tools > Android > Sync Gradle with Project Files__
 * Run `app` module on an emulator or an Android device
 
+_OR_
+
+Install the lasest release [here](https://github.com/ymittal/codeu_project_2017/releases). You would need to enable **Install from Unknown Sources** in the Security Settings on your Android device.
+
 ## Navigating ChatMe
 
 At startup, a user is prompted to create an account or log in using their email and password. On sign up, a unique username is assigned using their email address. On a successful log in, the application navigates to the conversations screen where they may create a new conversation (one-on-one or group) or navigate to their profile or the list of users.
